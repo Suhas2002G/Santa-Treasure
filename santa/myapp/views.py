@@ -66,8 +66,25 @@ def user_logout(request):
 def dashboard(request):
     return render(request,'dashboard.html')
 
+
+# Admin Login 
 def adminLogin(request):
-    return render(request,'adminLogin.html')
+    context={}
+    if request.method == 'GET':
+        return render(request,'AdminLogin.html')
+    else:
+        e=request.POST['ue']
+        p=request.POST['upass']
+        u=authenticate(username=e,password=p) 
+        # print(u)
+        if u is not None and u.is_superuser==True:
+            # print(u)
+            login(request,u)        
+            return redirect('/dashboard')
+        else:
+            context['errormsg']='Invalid Admin Credential'
+            return render(request,'AdminLogin.html',context)
+    
 
 def myprofile(request):
     return render(request,'profile.html')

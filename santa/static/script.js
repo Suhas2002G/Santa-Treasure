@@ -11,12 +11,7 @@ function addToCart(button) {
     }, 2000);  // 2000ms = 2 seconds
 }
 
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function () {
-        document.querySelector('.nav-link.active')?.classList.remove('active');
-        this.classList.add('active');
-    });
-});
+
 
 
 
