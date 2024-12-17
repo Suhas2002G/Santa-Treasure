@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+
+
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="hero-title">Welcome to Santa's Treasure</h1>
+        <p class="tag-line">Treasures Straight from the North Pole!</p>
+        <a href="/gifts" class="btn btn-custom">Start Shopping</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="container py-5">
+    <h2 class="text-center mb-5">How Santa's Logistics Works</h2>
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-map"></i>
+                    </div>
+                    <h4>Route Optimization</h4>
+                    <p>Santa can efficiently deliver gifts by optimizing delivery routes using advanced algorithms.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h4>Real-Time Tracking</h4>
+                    <p>Follow Santa's sleigh in real-time as he delivers gifts around the globe!</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-gift"></i>
+                    </div>
+                    <h4>Gift Distribution</h4>
+                    <p>Manage and track the gifts delivered to each home with detailed progress and status.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Know All About Christmas Section -->
+<section id="about-christmas" class="container py-5">
+    <h2 class="text-center mb-5 know-about-christmas">Know All About Christmas</h2>
+    <div class="row">
+        <!-- Christmas Card 1: Christmas Tree -->
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <img src="{% static 'images/tree.webp' %}" class="card-img-top" alt="Christmas Tree" height="300px">
+                <div class="card-body">
+                    <h5 class="card-title">The Christmas Tree</h5>
+                    <p class="card-text">The Christmas tree is one of the most iconic symbols of the holiday season. It's decorated with lights, ornaments, and a star or angel on top.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Christmas Card 2: Santa Claus -->
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <img src="{% static 'images/santaclause.jpg' %}" class="card-img-top" alt="Santa Claus" height="300px">
+                <div class="card-body">
+                    <h5 class="card-title">Santa Claus</h5>
+                    <p class="card-text">Santa Claus, also known as Saint Nicholas, brings joy and gifts to children around the world on Christmas Eve.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Christmas Card 3: Christmas Feast -->
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <img src="{% static 'images/feast.webp' %}" class="card-img-top" alt="Christmas Feast" height="300px">
+                <div class="card-body">
+                    <h5 class="card-title">The Christmas Feast</h5>
+                    <p class="card-text">Christmas meals are filled with traditional foods like roast turkey, ham, and pies. It’s a time for family gatherings and sharing delicious food.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock 'main' %}

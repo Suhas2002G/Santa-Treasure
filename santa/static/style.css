@@ -1,0 +1,777 @@
+/* navbar style starts here  */
+.navbar-logo{
+    font-size: 1rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: "Playwrite HR Lijeva", cursive;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal; 
+}
+/* .navbar-logo{
+    max-width: 20px;
+    max-height: 20px;
+} */
+.navbar-custom {
+    /* background-color: #ff204e; */
+    background-color: #0f0e0e;
+    height: 70px;
+    
+  }
+  .navbar-custom .navbar-brand,
+  .navbar-custom .nav-link {
+    color: white;
+  }
+  .nav-link{
+    margin-right: 35px;
+  }
+  .navbar-custom .nav-link:hover {
+    color: #f5f5f5;
+  }
+  .navbar-logo {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  .navbar-toggler-icon {
+    background-color: white;
+  }
+  /* navbar style ends here  */
+
+
+
+
+
+  /* footer style starts here  */
+  .footer {
+    background-color: #0f0e0e;
+    color: #f5f5f5;
+    padding: 25px 0;
+}
+.footer h5 {
+    color: #ff204e;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.footer a {
+    color: #f5f5f5;
+    text-decoration: none;
+    
+}
+.footer a:hover {
+    color: #ff204e;
+}
+.social-icons i {
+    font-size: 1.5rem;
+    color: #f5f5f5;
+    margin-right: 35px; /* Adds spacing between icons */
+}
+.social-icons i:last-child {
+  margin-right: 0; /* Removes margin for the last icon */
+}
+.social-icons i:hover {
+    color: #ff204e;
+}
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+  /* footer style ends  */
+
+
+  .hero-section {
+    /* background-image: url("{% static 'images/Santa-Claus.webp' %}"); */
+    background-image: url("https://cdn.britannica.com/38/196638-050-94E05EF4/Santa-Claus.jpg");
+    /* background-image: url("https://santaclausvillage.info/wp-content/uploads/2023/11/20160226-_DSC6638-Edit-Copy-scaled.jpg"); */
+    margin-top: 70px;
+    background-size: cover;
+    background-position: center;
+    color: rgb(255, 255, 255);
+    padding: 110px 0;
+    height: 85vh;   /* for santa image height */
+  }
+  .tag-line{
+    font-size: 1.4rem;
+    color: rgb(255, 255, 255);
+  }
+  .hero-title {
+    padding-top: 20px;
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: "Playwrite HR Lijeva", cursive;
+    font-optical-sizing: auto;
+    font-weight: 900;
+    font-style: normal;
+  }
+  .btn-custom {
+    background-color: #ff204e;
+    color: white;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    padding: 15px 25px;
+  }
+  .btn-custom:hover {
+    background-color: #a0153e;
+    color: white;
+  }
+  .feature-icon {
+    font-size: 3rem;
+    color: #ff204e;
+  }
+  .card-custom {
+    background-color: #fff3e6;
+    border: 1px solid #ff204e;
+  }
+  
+  .know-about-christmas{
+    font-family: "Playwrite HR Lijeva", cursive;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+/* login-register page style starts here  */
+.container-bg-login {
+  background-image: url("https://cdn.britannica.com/38/196638-050-94E05EF4/Santa-Claus.jpg");
+  background-size: cover;
+  margin-top: 70px;
+  background-position: center;
+  padding: 110px 0;
+  height: 100vh; /* Full screen height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+}
+
+.login-header {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: #ff204e;
+}
+
+.input-group {
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.input-group-text {
+  background-color: #ff204e;
+  color: white;
+  border: none;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  border-radius: 0;
+  padding: 10px 15px;
+}
+
+.btn-custom {
+  background-color: #ff204e;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #a0153e;
+  transform: scale(1.05);
+}
+
+.forget-pass a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.forget-pass a:hover {
+  color: #a0153e;
+}
+
+/* login-register page style ends here  */
+
+
+
+
+/* register.html style starts here  */
+.container-bg-register {
+  background-image: url("https://cdn.britannica.com/38/196638-050-94E05EF4/Santa-Claus.jpg");
+  background-size: cover;
+  margin-top: 50px;
+  background-position: center;
+  padding: 110px 0;
+  height: 100vh; /* Full screen height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+}
+
+.register-header {
+  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  color: #ff204e;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.form-control {
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  border-radius: 50px;
+}
+
+.btn-custom {
+  background-color: #ff204e;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #a0153e;
+  transform: scale(1.05);
+}
+
+.already-account {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.already-account a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.already-account a:hover {
+  color: #a0153e;
+}
+
+/* register.html style ends here  */
+
+
+
+/* alert boxes start  */
+.custom-alert {
+  border-radius: 10px;            
+  font-size: 1.1rem;              
+  padding: 15px;                  
+  margin-bottom: 20px; 
+  display: flex;                  
+  align-items: center;
+}
+
+.alert-danger {
+  background-color: #f8d7da;      
+  border-color: #f5c6cb;          
+  color: #721c24;                 
+  border-left: 5px solid #721c24; 
+}
+
+.alert-success {
+  background-color: #d4edda;      
+  border-color: #c3e6cb;          
+  color: #155724;                 
+  border-left: 5px solid #155724; 
+}
+
+.custom-alert i {
+  font-size: 1.5rem;              
+  margin-right: 10px;            
+}
+
+.alert-danger .bi-x-circle {
+  color: #721c24;                
+}
+
+.alert-success .bi-check-circle {
+  color: #155724;                
+}
+
+.alert-danger:hover, .alert-success:hover {
+  opacity: 0.9;                   
+}
+
+/* alert boxes ends  */
+
+
+
+/* gifts.html style starts here  */
+/* Modernized Card Design */
+.filter-section {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.filter-group h6 {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.btn-apply-filters {
+  background-color: #ff204e;
+  color: white;
+}
+
+.btn-apply-filters:hover {
+  background-color: #a0153e;
+}
+
+
+
+/* category circle starts  */
+
+.container-circle {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  text-align: center;
+}
+
+.categories-circle {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
+} 
+
+.category-circle {
+  flex: 0 0 auto;
+  background: #fff;
+  border-radius: 50%;
+  padding: 20px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-circle img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.category-circle p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.category-circle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* category circle starts  */
+
+
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.search-input {
+  width: 400px;
+  padding: 12px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #ff204e;
+}
+
+.search-btn {
+  padding: 12px 20px;
+  background-color: #dc1212;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+  /* background-color: #229799; */
+  background-color: #d0c52d;
+}
+
+
+/* gift card  */
+.gift-card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: #ffffff;
+}
+
+.gift-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.card-img-top {
+  height: 350px;
+  object-fit: cover;
+  border-bottom: 3px solid #0f5ecb;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.gift-name {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.gift-description {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.gift-price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #E63946;
+  /* margin-bottom: 15px; */
+}
+
+.add-to-cart {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #0f5ecb;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.add-to-cart:hover {
+  background-color: #03324f;
+  transform: scale(1.05);
+}
+
+.add-to-cart i {
+  margin-right: 8px;
+}
+
+/* gifts.html style ends here  */
+
+
+
+/* Carousel Styles */
+.carousel-item img {
+  /* height: 60vh;  */
+  object-fit: cover;
+  border-radius: 12px;
+  height: 500px;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 10px 20px;
+  max-width: 80%;
+  margin: auto;
+}
+
+.carousel-caption h5 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.carousel-caption p {
+  font-size: 1.2rem;
+  color: #f5f5f5;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 10px;
+}
+
+/* dashboard starts here  */
+.dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 30%;
+}
+
+.stat-card h2 {
+  margin-bottom: 10px;
+  color: #007bff;
+}
+
+.stat-card p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.actions {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.actions button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 10px;
+  font-size: 16px;
+}
+
+.actions button:hover {
+  background-color: #0056b3;
+}
+
+.gift-table {
+  margin: 0 auto;
+  width: 80%;
+}
+
+.gift-table table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.gift-table th,
+.gift-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.gift-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.gift-table td {
+  color: #333;
+}
+
+.gift-table button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.gift-table button:hover {
+  background-color: #218838;
+}
+
+/* dashboard ends here  */
+
+
+/* myprofile starts  */
+.profile-sidebar {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image img {
+  width: 100px;
+  height: 100px;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.profile-email {
+  font-size: 1rem;
+  color: #666;
+}
+
+.btn-edit-profile {
+  background-color: #007bff;
+  color: #fff;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-view-orders {
+  background-color: #007bff;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+}
+
+.modal-footer {
+  border-top: none;
+}
+
+/* myprofile ends  */
+
+
+
+
+/* admin login starts  */
+.admin-login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-login-title {
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-login-field {
+  margin-bottom: 15px;
+}
+
+.admin-login-label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.admin-login-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.admin-login-button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.admin-login-button:hover {
+  background-color: #218838;
+}
+/* admin login ends */

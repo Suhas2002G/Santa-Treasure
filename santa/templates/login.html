@@ -1,0 +1,52 @@
+
+
+
+
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+
+<div class="container-bg-login py-5">
+  <div class="login-container">
+
+    {% if errormsg %}
+    <div class="alert alert-danger custom-alert" role="alert">
+      <i class="bi bi-x-circle"></i> {{ errormsg }}
+    </div>
+    {% endif %}
+
+    <!-- Login Form -->
+    <h2 class="login-header">Welcome to Santa's Logistics</h2>
+    <form action="#" method="POST">
+      {% csrf_token %}
+      <div class="mb-4 input-group">
+        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+        <input
+          type="email"
+          name="ue"
+          class="form-control"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      <div class="mb-4 input-group">
+        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+        <input
+          type="password"
+          name="upass"
+          class="form-control"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-custom w-100">Login</button>
+    </form>
+    <!-- Forgot password link -->
+    <div class="forget-pass text-center mt-3">
+      <a href="/register" style="color: #ff204e;">Don’t have an account? Register here!</a>
+    </div>
+  </div>
+</div>
+
+{% endblock 'main' %}
+

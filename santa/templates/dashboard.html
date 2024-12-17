@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+
+<div class="dashboard" style="margin-top: 69px;">
+    <h1>Gift Tracking System Dashboard</h1>
+    <div class="stats">
+        <div class="stat-card">
+            <h2>Total Gifts</h2>
+            <p>150</p>
+        </div>
+        <div class="stat-card">
+            <h2>Pending Deliveries</h2>
+            <p>20</p>
+        </div>
+        <div class="stat-card">
+            <h2>Delivered Gifts</h2>
+            <p>120</p>
+        </div>
+    </div>
+    <div class="actions">
+        <h2>Actions</h2>
+        <button onclick="window.location.href='/add-gift/'">Add New Gift</button>
+        <button onclick="window.location.href='/track-gift/'">Track Gift</button>
+    </div>
+    <div class="gift-table">
+        <h2>Gift Summary</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Gift ID</th>
+                    <th>Recipient</th>
+                    <th>Dispached Date</th>
+                    <th>Status</th>
+                    <th>Delivery Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>GFT101</td>
+                    <td>Harshal Patil</td>
+                    <td>2024-12-05</td>
+                    <td>Delivered</td>
+                    <td>2024-12-07</td>
+                    <td><button>View</button></td>
+                </tr>
+                <tr>
+                    <td>GFT102</td>
+                    <td>Suhas Gondukupi</td>
+                    <td>2024-12-06</td>
+                    <td>Pending</td>
+                    <td>N/A</td>
+                    <td><button>View</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock 'main' %}
+

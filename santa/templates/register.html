@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+<div class="container-bg-register py-5">
+  <div class="register-container">
+    {% if errormsg %}
+    <div class="alert alert-danger custom-alert" role="alert">
+      <i class="bi bi-x-circle"></i> {{ errormsg }}
+    </div>
+    {% endif %} 
+    {% if success %}
+    <div class="alert alert-success custom-alert" role="alert">
+      <i class="bi bi-check-circle"></i> {{ success }}
+    </div>
+    {% endif %}
+
+    <!-- Registration Form -->
+    <h2 class="register-header">Santa's Logistics Registration</h2>
+    <form action="#" method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input
+          type="text"
+          name="uname"
+          class="form-control"
+          id="name"
+          placeholder="Enter your name"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          name="uemail"
+          class="form-control"
+          id="email"
+          placeholder="Enter your email id"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          name="upass"
+          class="form-control"
+          id="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="confirm-password" class="form-label">Confirm Password</label>
+        <input
+          type="password"
+          name="ucpass"
+          class="form-control"
+          id="confirm-password"
+          placeholder="Confirm your password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-custom w-100">Register</button>
+    </form>
+    <!-- Login redirect link -->
+    <div class="already-account">
+      <a href="/login" style="color: #ff204e">Already have an account? Login here</a>
+    </div>
+  </div>
+</div>
+{% endblock 'main' %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %} 
+
+
+<div class="admin-login-container">
+    <h2 class="admin-login-title">Admin Login</h2>
+    <form method="post" action="" class="admin-login-form">
+        {% csrf_token %}
+        <div class="admin-login-field">
+            <label for="username" class="admin-login-label">Username:</label>
+            <input type="text" id="username" name="username" class="admin-login-input" placeholder="Enter your username" required>
+        </div>
+        <div class="admin-login-field">
+            <label for="password" class="admin-login-label">Password:</label>
+            <input type="password" id="password" name="password" class="admin-login-input" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="admin-login-button">Login</button>
+    </form>
+</div>
+
+
+
+
+{% endblock 'main' %}
