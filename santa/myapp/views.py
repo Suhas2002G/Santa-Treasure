@@ -6,10 +6,11 @@ from myapp.models import Gifts,Cart
 from django.db.models import Q          #Q class
 
 
-# Create your views here.
+# Home page
 def home(request):
     return render(request,'home.html')
 
+# New User Registration
 def register(request):
     context={}
     if request.method == 'GET':
@@ -32,7 +33,7 @@ def register(request):
         else:
             try:
                 u=User.objects.create(username=ue,email=ue,first_name=uname)
-                u.set_password(p)  #set_password : it is used to convert password into encripted password
+                u.set_password(p)  # set_password : To convert password into encripted form
                 u.save()
                 context['success']='User Created Successfully'
             except Exception:
@@ -40,8 +41,7 @@ def register(request):
         return render(request,'register.html',context)
     
 
-
-
+# User Login
 def user_login(request):
     context={}
     if request.method == 'GET':
@@ -49,62 +49,35 @@ def user_login(request):
     else:
         e=request.POST['ue']
         p=request.POST['upass']
-        u=authenticate(username=e,password=p) #also import from auth
+        u=authenticate(username=e,password=p) # For Authentication Purpose
         if u is not None:
-            login(request,u)        #also import from auth
+            login(request,u)        # Login Method
             return redirect('/')
         else:
             context['errormsg']='Invalid Credential'
             return render(request,'login.html',context)
 
 
+# User/Admin Logout
 def user_logout(request):
     logout(request)
     return redirect('/')
 
-
-def dashboard(request):
-    return render(request,'dashboard.html')
-
-
-# Admin Login 
-def adminLogin(request):
-    print(User.objects.filter(username='admin@gmail.com'))
-    context = {}
-    if request.method == 'GET':
-        return render(request, 'adminLogin.html', context)
-    
-    e = request.POST.get('ue')  # retrieve username
-    p = request.POST.get('upass')  # retrieve password
-    
-    # Authenticate user
-    user = authenticate(username=e, password=p)
-    if user:
-        if user.is_staff:  # Check for staff privileges
-            login(request, user)
-            return redirect('/dashboard')  # Redirect to admin dashboard
-        context['errormsg'] = "You don't have Admin access"
-    else:
-        context['errormsg'] = 'Invalid Admin Credentials'
-    
-    # Render the login page with error message
-    return render(request, 'adminLogin.html', context)
-    
-
-
+# User Profile Page
 def myprofile(request):
     context={}
-    u=User.objects.filter(id=request.user.id)
+    u=User.objects.filter(id=request.user.id)   # Fetch details of Authenticated User
     context['data']=u
     return render(request,'profile.html',context)
 
-
+# Gifts/Product Page
 def gifts(request):
     context={}
-    g=Gifts.objects.filter(is_active=True) #filter and display only those data which are active
+    g=Gifts.objects.filter(is_active=True) # Filter and Display only those data which are active
     context['data']=g
     return render(request,'gifts.html',context)
 
+# Add to Cart Functionality
 # def addtocart(request,pid):
 #     context={}
 #     if request.user.is_authenticated :  #check whether is login or not (if not then reddirect to login page)
@@ -131,6 +104,61 @@ def gifts(request):
 #         return redirect('/login')
     
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#`````````````  ADMIN RELATED LOGIC     ``````````````````
+
+
+# Admin Login 
+def adminLogin(request):
+    print(User.objects.filter(username='admin@gmail.com'))
+    context = {}
+    if request.method == 'GET':
+        return render(request, 'adminLogin.html', context)
+    
+    e = request.POST.get('ue')  # retrieve username
+    p = request.POST.get('upass')  # retrieve password
+    
+    user = authenticate(username=e, password=p)  # Authenticate user
+    if user:
+        if user.is_staff:  # Check for staff privileges
+            login(request, user)
+            return redirect('/dashboard')  # Redirect to admin dashboard
+        context['errormsg'] = "You don't have Admin access"
+    else:
+        context['errormsg'] = 'Invalid Admin Credentials'
+    return render(request, 'adminLogin.html', context)  # Render the login page with error message
+
+
+
+# Dashboard Page for Admin
+def dashboard(request):
+    context={}
+    return render(request,'dashboard.html',context)
+
+
+# Track Order Page for Admin
 def trackorder(request):
     context={}
     return render(request, 'trackorder.html', context)
