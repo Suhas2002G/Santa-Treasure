@@ -14,6 +14,7 @@ urlpatterns = [
     path('gifts', views.gifts),
     path('adminLogin', views.adminLogin),
     path('trackorder', views.trackorder),
+    path('vieworder', views.vieworder),
     # path('addtocart/<pid>', views.addtocart),
 
 

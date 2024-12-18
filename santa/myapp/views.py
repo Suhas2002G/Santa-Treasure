@@ -1,9 +1,9 @@
 from django.shortcuts import render,HttpResponse,redirect
-from django.contrib.auth.models import User        #imported by me, for authentication
-from django.contrib.auth import authenticate         #imported by me, for authentication
+from django.contrib.auth.models import User        
+from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
-from myapp.models import Gifts,Cart
-from django.db.models import Q          #Q class
+from myapp.models import Gifts,Cart,Address
+from django.db.models import Q          
 
 
 # Home page
@@ -162,3 +162,8 @@ def dashboard(request):
 def trackorder(request):
     context={}
     return render(request, 'trackorder.html', context)
+
+# View Order Page for Admin
+def vieworder(request):
+    context={}
+    return render(request, 'vieworder.html', context)

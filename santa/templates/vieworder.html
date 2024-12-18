@@ -1,0 +1,54 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block 'main' %}
+
+<div class="order-container">
+    <div class="customer-details">
+      <h2>Customer Details</h2>
+      <div class="customer-info">
+        <p><strong>Name:</strong> {{ customer.name }}</p>
+        <p><strong>Email:</strong> {{ customer.email }}</p>
+        <p><strong>Phone:</strong> {{ customer.phone }}</p>
+      </div>
+    </div>
+
+    <div class="order-details">
+      <h2>Ordered Products</h2>
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Product ID</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in order_items %}
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.total_price }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="delivery-address">
+      <h2>Delivery Address</h2>
+      <p><strong>Address:</strong> {{ order.delivery_address }}</p>
+      <p><strong>City:</strong> {{ order.city }}</p>
+      <p><strong>Postal Code:</strong> {{ order.postal_code }}</p>
+
+      <!-- Embedded Google Map -->
+      <div class="map-container">
+        <iframe 
+          src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q={{ order.delivery_address|urlencode }}" 
+          width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock 'main' %}
