@@ -1,0 +1,36 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block 'main' %}
+<div class="dashboard-container" style="margin-top: 70px;">
+    <div class="tracking-card">
+        <div class="card-header">
+            <h3>Track Your Courier</h3>
+        </div>
+        <div class="card-body">
+            <form class="tracking-form">
+                <label for="tracking-number" class="input-label">Enter Tracking Number:</label>
+                <input type="text" id="tracking-number" class="input-field" placeholder="Tracking Number" required>
+                <button type="submit" class="track-btn">Track</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="tracking-details">
+        <div class="detail-card">
+            <h4>Customer Information</h4>
+            <p><strong>Customer Name:</strong> <span class="detail-value">Suhas Gondukupi</span></p>
+            <p><strong>Tracking Number:</strong> <span class="detail-value">OD101</span></p>
+            <p><strong>Delivery Status:</strong> <span class="status-in-progress">In Progress</span></p>
+            <p><strong>Current Location:</strong> <span class="detail-value">Pune, Maharashtra</span></p>
+            <!-- <p><strong>Estimated Delivery Time:</strong> <span class="detail-value">2:00 PM</span></p> -->
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn cancel-btn">Cancel Delivery</button>
+            <button class="action-btn contact-btn">Mark as Deliver</button>
+        </div>
+    </div>
+</div>
+{% endblock 'main' %}
+

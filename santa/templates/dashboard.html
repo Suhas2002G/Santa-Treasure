@@ -1,63 +1,82 @@
-{% extends 'base.html' %}
+{% extends 'adminbase.html' %}
 {% load static %}
-{% block 'main' %}
 
-<div class="dashboard" style="margin-top: 69px;">
-    <h1>Welcome Admin..!</h1>
-    <h4>Gift Tracking System Dashboard</h4>
-    <div class="stats">
-        <div class="stat-card">
-            <h2>Total Gifts</h2>
-            <p>150</p>
+{% block 'main' %}
+<!-- Container for Admin Dashboard -->
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Welcome to the Admin Dashboard</h1>
+    
+    <!-- Dashboard Cards -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card total-orders-card">
+                <div class="card-body">
+                    <h5 class="dash-card-title">Total Orders</h5>
+                    <p class="dash-card-text">150</p>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <h2>Pending Deliveries</h2>
-            <p>20</p>
+        <div class="col-md-4">
+            <div class="card pending-orders-card">
+                <div class="card-body">
+                    <h5 class="dash-card-title">Pending Orders</h5>
+                    <p class="dash-card-text">30</p>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <h2>Delivered Gifts</h2>
-            <p>120</p>
+        <div class="col-md-4">
+            <div class="card delivered-orders-card">
+                <div class="card-body">
+                    <h5 class="dash-card-title">Delivered Orders</h5>
+                    <p class="dash-card-text">120</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="actions">
-        <h2>Actions</h2>
-        <button onclick="window.location.href='/add-gift/'">Add New Gift</button>
-        <button onclick="window.location.href='/track-gift/'">Track Gift</button>
-    </div>
-    <div class="gift-table">
-        <h2>Gift Summary</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Gift ID</th>
-                    <th>Recipient</th>
-                    <th>Dispached Date</th>
-                    <th>Status</th>
-                    <th>Delivery Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>GFT101</td>
-                    <td>Harshal Patil</td>
-                    <td>2024-12-05</td>
-                    <td>Delivered</td>
-                    <td>2024-12-07</td>
-                    <td><button>View</button></td>
-                </tr>
-                <tr>
-                    <td>GFT102</td>
-                    <td>Suhas Gondukupi</td>
-                    <td>2024-12-06</td>
-                    <td>Pending</td>
-                    <td>N/A</td>
-                    <td><button>View</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+    <!-- Orders Table -->
+    <h3 class="mt-5">Recent Orders</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Order Status</th>
+                <th>Location</th>
+                <th>Customer Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dummy Order 1 -->
+            <tr>
+                <td>1001</td>
+                <td>2024-12-18</td>
+                <td>Pending</td>
+                <td>New York</td>
+                <td>John Doe</td>
+                <td><a href="#" class="btn btn-primary">View</a></td>
+            </tr>
+            <!-- Dummy Order 2 -->
+            <tr>
+                <td>1002</td>
+                <td>2024-12-17</td>
+                <td>Delivered</td>
+                <td>Los Angeles</td>
+                <td>Jane Smith</td>
+                <td><a href="#" class="btn btn-primary">View</a></td>
+            </tr>
+            <!-- Dummy Order 3 -->
+            <tr>
+                <td>1003</td>
+                <td>2024-12-16</td>
+                <td>Pending</td>
+                <td>Chicago</td>
+                <td>Emily Johnson</td>
+                <td><a href="#" class="btn btn-primary">View</a></td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 {% endblock 'main' %}
-

@@ -130,3 +130,7 @@ def gifts(request):
 #     else:
 #         return redirect('/login')
     
+
+def trackorder(request):
+    context={}
+    return render(request, 'trackorder.html', context)

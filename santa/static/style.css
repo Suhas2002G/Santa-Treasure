@@ -565,111 +565,185 @@
 }
 
 /* dashboard starts here  */
-.dashboard {
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.dashboard h1 {
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.dashboard h4 {
-  color: #333;
-  text-align: center;
-  margin-bottom: 40px;
-}
-.stats {
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 30%;
-}
-
-.stat-card h2 {
-  margin-bottom: 10px;
-  color: #007bff;
-}
-
-.stat-card p {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-}
-
-.actions {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.actions button {
-  background-color: #007bff;
+.total-orders-card {
+  background-color: #4CAF50;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 0 10px;
-  font-size: 16px;
+  text-align: center;
 }
 
-.actions button:hover {
+.pending-orders-card {
+  background-color: #FF9800;
+  color: white;
+  text-align: center;
+}
+
+.delivered-orders-card {
+  background-color: #2196F3;
+  color: white;
+  text-align: center;
+}
+
+.dash-card-title {
+  font-weight: bold;
+}
+.dash-card-text{
+  font-size: larger;
+}
+.table th, .table td {
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
   background-color: #0056b3;
+  border-color: #0056b3;
+}
+/* dashboard ends here  */
+
+
+
+/* trackorder.html starts here  */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
-.gift-table {
-  margin: 0 auto;
-  width: 80%;
-  margin-bottom: 40px;
-}
-
-.gift-table table {
-  width: 100%;
-  border-collapse: collapse;
+.tracking-card {
   margin-top: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.gift-table th,
-.gift-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: center;
-}
-
-.gift-table th {
-  background-color: #007bff;
-  color: white;
-  font-weight: bold;
-}
-
-.gift-table td {
+.card-header h3 {
+  font-size: 22px;
+  margin-bottom: 15px;
   color: #333;
 }
 
-.gift-table button {
+.tracking-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.input-field {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition: border-color 0.3s;
+}
+
+.input-field:focus {
+  border-color: #007bff;
+}
+
+.track-btn {
+  padding: 10px 20px;
   background-color: #28a745;
   color: white;
   border: none;
-  padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.gift-table button:hover {
+.track-btn:hover {
   background-color: #218838;
 }
 
-/* dashboard ends here  */
+/* Tracking Details */
+.tracking-details {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
 
+.detail-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 48%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.detail-card h4 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.detail-card p {
+  font-size: 16px;
+  color: #555;
+}
+
+.detail-card .detail-value {
+  font-weight: bold;
+  color: #333;
+}
+
+.status-in-progress {
+  font-weight: bold;
+  color: #ffad33;
+}
+
+.status-delivered {
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+.action-btn {
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}
+
+.contact-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.contact-btn:hover {
+  background-color: #0056b3;
+}
+
+/* trackorder.html ends here  */
 
 /* myprofile starts  */
 .profile-sidebar {

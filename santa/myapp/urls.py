@@ -13,6 +13,7 @@ urlpatterns = [
     path('myprofile', views.myprofile),
     path('gifts', views.gifts),
     path('adminLogin', views.adminLogin),
+    path('trackorder', views.trackorder),
     # path('addtocart/<pid>', views.addtocart),
 
 
