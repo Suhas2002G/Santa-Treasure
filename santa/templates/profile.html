@@ -2,7 +2,8 @@
 {% load static %}
 {% block 'main' %}
 
-<div class="container my-5 ">
+{% for i in data %}
+<div class="container my-5">
   <div class="profile-section">
     <div class="row mt-5">
       <!-- Profile Sidebar -->
@@ -33,26 +34,23 @@
           <h4 class="section-title">Account Information</h4>
           <div class="info-item">
             <span class="info-label">Name:</span>
-            <span class="info-value">John Doe</span>
+            <span class="info-value">{{i.first_name}}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Email:</span>
-            <span class="info-value">johndoe@example.com</span>
+            <span class="info-value">{{i.username}}</span>
           </div>
           <div class="info-item">
             <span class="info-label">Phone:</span>
-            <span class="info-value">+91-9876543210</span>
+            <span class="info-value"></span>
           </div>
           <div class="info-item">
             <span class="info-label">Address:</span>
             <span class="info-value">123, Santa Street, Wonderland, North Pole</span>
           </div>
-          <div class="info-item">
-            <span class="info-label">Membership:</span>
-            <span class="info-value">Prime Member</span>
-          </div>
+          
           <hr />
-          <h4 class="section-title">Order History</h4>
+          <!-- <h4 class="section-title">Order History</h4>
           <ul class="order-list">
             <li>
               <span class="order-title">Order #12345</span>
@@ -71,7 +69,7 @@
             data-bs-target="#orderHistoryModal"
           >
             View All Orders
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
@@ -152,5 +150,5 @@
     </div>
   </div>
 </div>
-
+{% endfor %}
 {% endblock 'main' %}

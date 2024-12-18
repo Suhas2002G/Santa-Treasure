@@ -69,25 +69,34 @@ def dashboard(request):
 
 # Admin Login 
 def adminLogin(request):
-    context={}
+    print(User.objects.filter(username='admin@gmail.com'))
+    context = {}
     if request.method == 'GET':
-        return render(request,'AdminLogin.html')
+        return render(request, 'adminLogin.html', context)
+    
+    e = request.POST.get('ue')  # retrieve username
+    p = request.POST.get('upass')  # retrieve password
+    
+    # Authenticate user
+    user = authenticate(username=e, password=p)
+    if user:
+        if user.is_staff:  # Check for staff privileges
+            login(request, user)
+            return redirect('/dashboard')  # Redirect to admin dashboard
+        context['errormsg'] = "You don't have Admin access"
     else:
-        e=request.POST['ue']
-        p=request.POST['upass']
-        u=authenticate(username=e,password=p) 
-        # print(u)
-        if u is not None and u.is_superuser==True:
-            # print(u)
-            login(request,u)        
-            return redirect('/dashboard')
-        else:
-            context['errormsg']='Invalid Admin Credential'
-            return render(request,'AdminLogin.html',context)
+        context['errormsg'] = 'Invalid Admin Credentials'
+    
+    # Render the login page with error message
+    return render(request, 'adminLogin.html', context)
     
 
+
 def myprofile(request):
-    return render(request,'profile.html')
+    context={}
+    u=User.objects.filter(id=request.user.id)
+    context['data']=u
+    return render(request,'profile.html',context)
 
 
 def gifts(request):

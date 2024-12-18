@@ -22,5 +22,6 @@ class Address(models.Model):
     city = models.CharField(max_length=50)  # City
     state = models.CharField(max_length=50)  # State
     postal_code = models.CharField(max_length=10)  # Postal/ZIP code
+    phone = models.CharField(max_length=10, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of creation
     updated_at = models.DateTimeField(auto_now=True)  # Timestamp of last update
