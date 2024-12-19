@@ -66,9 +66,40 @@ def user_logout(request):
 # User Profile Page
 def myprofile(request):
     context={}
-    u=User.objects.filter(id=request.user.id)   # Fetch details of Authenticated User
-    context['data']=u
+    a=Address.objects.filter(id=request.user.id)    # Fetch details of Authenticated User
+
+    context['data']=a
     return render(request,'profile.html',context)
+
+
+# Add Address/Phone
+def addaddress(request):
+    if request.method == 'GET':
+        return render(request, 'addaddress.html')
+    else:       # Retrieve form data
+        street_address = request.POST['street_address']
+        city = request.POST['city']
+        state = request.POST['state']
+        postal_code = request.POST['postal_code']
+        phone = request.POST.get('phone', '')
+
+        # Ensure the user is authenticated
+        if request.user.is_authenticated:
+            # Create the address object and associate it with the user instance
+            Address.objects.create(
+                uid=request.user,  # Pass the User instance directly
+                street_address=street_address,
+                city=city,
+                state=state,
+                postal_code=postal_code,
+                phone=phone
+            )
+            return redirect('/myprofile')
+        else:
+            # If user is not authenticated, redirect to login page
+            return redirect('login')  # Adjust to your login URL name
+
+
 
 # Gifts/Product Page
 def gifts(request):
@@ -105,7 +136,16 @@ def gifts(request):
     
 
 
+# Sort by Price [high->low or low->high]: 
+def sort(request,x):
+    context={}
+    if x=='1':
+        p=Gifts.objects.order_by('-price').filter(is_active=True)   # high-->low
+    else:
+        p=Gifts.objects.order_by('price').filter(is_active=True)    # low-->high
 
+    context['data']=p
+    return render(request,'gifts.html',context)
 
 
 

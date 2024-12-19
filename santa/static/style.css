@@ -564,6 +564,174 @@
   padding: 10px;
 }
 
+
+/* myprofile starts  */
+.profile-container {
+  max-width: 900px;
+  margin: 70px auto;
+  padding: 20px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin: 0;
+}
+
+.profile-header p {
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+}
+
+.profile-avatar img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #48c9b0;
+  margin-right: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.profile-info p i {
+  margin-right: 10px;
+  color: #48c9b0;
+  font-size: 1.2rem;
+}
+
+.btn-add-address {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #e74c3c;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-address:hover {
+  background-color: #c0392b;
+}
+
+/* myprofile ends  */
+
+
+/* Add address page style starts here  */
+.address-form-container {
+  width: 50%;
+  margin: 90px auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-form-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+  background-color: #0056b3;
+}
+/* Add address page style sends here  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ADMIN PANEL STYLING  */
+
+
 /* dashboard starts here  */
 .total-orders-card {
   background-color: #4CAF50;
@@ -668,7 +836,6 @@
   background-color: #218838;
 }
 
-/* Tracking Details */
 .tracking-details {
   display: flex;
   justify-content: space-between;
@@ -709,7 +876,6 @@
   color: #28a745;
 }
 
-/* Action Buttons */
 .action-buttons {
   display: flex;
   flex-direction: column;
@@ -744,77 +910,6 @@
 }
 
 /* trackorder.html ends here  */
-
-/* myprofile starts  */
-.profile-sidebar {
-  text-align: center;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.profile-image img {
-  width: 100px;
-  height: 100px;
-}
-
-.profile-name {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-.profile-email {
-  font-size: 1rem;
-  color: #666;
-}
-
-.btn-edit-profile {
-  background-color: #007bff;
-  color: #fff;
-  margin-top: 10px;
-  width: 100%;
-}
-
-.btn-view-orders {
-  background-color: #007bff;
-  color: #fff;
-  margin-top: 10px;
-}
-
-.modal-header {
-  background-color: #f8f9fa;
-}
-
-.modal-footer {
-  border-top: none;
-}
-
-/* myprofile ends  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ADMIN PANEL STYLING  */
 
 
 /* vieworder.html page style starts here  */

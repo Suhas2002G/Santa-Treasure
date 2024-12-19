@@ -2,153 +2,30 @@
 {% load static %}
 {% block 'main' %}
 
-{% for i in data %}
-<div class="container my-5">
-  <div class="profile-section">
-    <div class="row mt-5">
-      <!-- Profile Sidebar -->
-      <div class="col-md-3">
-        <div class="profile-sidebar">
-          <div class="profile-image">
-            <img
-              src="https://via.placeholder.com/150"
-              alt="User Image"
-              class="rounded-circle img-thumbnail"
-            />
-          </div>
-          <h3 class="profile-name">Suhas Gondukupi</h3>
-          <p class="profile-email">suhas332002@gmail.com</p>
-          <button
-            class="btn btn-edit-profile"
-            data-bs-toggle="modal"
-            data-bs-target="#editProfileModal"
-          >
-            Edit Profile
-          </button>
-        </div>
+<div class="profile-container">
+  <div class="profile-header">
+      <h1>My Profile</h1>
+      <p>Manage your account information</p>
+  </div>
+  {% for i in data %}
+  <div class="profile-card">
+      <div class="profile-avatar">
+          <img src="{% static 'images/profilepng.jpg' %}" alt="User Avatar">
       </div>
-
-      <!-- Profile Details -->
-      <div class="col-md-9">
-        <div class="profile-details">
-          <h4 class="section-title">Account Information</h4>
-          <div class="info-item">
-            <span class="info-label">Name:</span>
-            <span class="info-value">{{i.first_name}}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Email:</span>
-            <span class="info-value">{{i.username}}</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Phone:</span>
-            <span class="info-value"></span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Address:</span>
-            <span class="info-value">123, Santa Street, Wonderland, North Pole</span>
-          </div>
+      <div class="profile-info">
+          <p><i class="fas fa-user"></i> <strong>Name : </strong> {{ i.uid.first_name }}</p>
+          <p><i class="fas fa-envelope"></i> <strong>Email : </strong> {{ i.uid.email }}</p>
           
-          <hr />
-          <!-- <h4 class="section-title">Order History</h4>
-          <ul class="order-list">
-            <li>
-              <span class="order-title">Order #12345</span>
-              <span class="order-date">Dec 10, 2024</span>
-              <span class="order-status">Delivered</span>
-            </li>
-            <li>
-              <span class="order-title">Order #12346</span>
-              <span class="order-date">Nov 28, 2024</span>
-              <span class="order-status">Pending</span>
-            </li>
-          </ul>
-          <button
-            class="btn btn-view-orders"
-            data-bs-toggle="modal"
-            data-bs-target="#orderHistoryModal"
-          >
-            View All Orders
-          </button> -->
-        </div>
+          {% if i.phone %}
+          <p><i class="fas fa-phone"></i> <strong>Phone : </strong> {{i.phone}}</p>
+          <p><i class="fas fa-map-marker-alt"></i> <strong>Address :</strong> {{ i.street_address}} {{i.city}}</p>
+          {% else %}
+          <p><i class="fas fa-phone"></i> <strong>Phone : </strong> Not provided</p>
+          <p><i class="fas fa-map-marker-alt"></i> <strong>Address : </strong> Not provided</p>
+          <a href="/addaddress" class="btn btn-add-address">Add Address/Phone</a>
+          {% endif %}
       </div>
-    </div>
   </div>
+  {% endfor %}
 </div>
-
-<!-- Edit Profile Modal -->
-<div
-  class="modal fade"
-  id="editProfileModal"
-  tabindex="-1"
-  aria-labelledby="editProfileModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="editName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="editName" placeholder="John Doe" />
-          </div>
-          <div class="mb-3">
-            <label for="editEmail" class="form-label">Email</label>
-            <input type="email" class="form-control" id="editEmail" placeholder="johndoe@example.com" />
-          </div>
-          <div class="mb-3">
-            <label for="editPhone" class="form-label">Phone</label>
-            <input type="text" class="form-control" id="editPhone" placeholder="+91-9876543210" />
-          </div>
-          <div class="mb-3">
-            <label for="editAddress" class="form-label">Address</label>
-            <textarea class="form-control" id="editAddress" rows="3">123, Santa Street, Wonderland, North Pole</textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save Changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Order History Modal -->
-<div
-  class="modal fade"
-  id="orderHistoryModal"
-  tabindex="-1"
-  aria-labelledby="orderHistoryModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderHistoryModalLabel">Order History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <ul class="order-list">
-          <li>
-            <span class="order-title">Order #12345</span>
-            <span class="order-date">Dec 10, 2024</span>
-            <span class="order-status">Delivered</span>
-          </li>
-          <li>
-            <span class="order-title">Order #12346</span>
-            <span class="order-date">Nov 28, 2024</span>
-            <span class="order-status">Pending</span>
-          </li>
-          <!-- Additional orders can be added here -->
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-{% endfor %}
 {% endblock 'main' %}

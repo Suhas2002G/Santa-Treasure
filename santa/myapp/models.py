@@ -3,7 +3,7 @@ from django.contrib.auth.models import User     #imported for cart functinality
 
 # Create your models here.
 class Gifts(models.Model):
-    CAT=((1,'Statue'),(2,'Tree'),(3,'Cap'),(4,'Cloths'))
+    CAT=((1,'Statue'),(2,'Tree'),(3,'Decorations'),(4,'Cloths'))
     name=models.CharField(max_length=50)
     price=models.IntegerField()
     cat=models.IntegerField(verbose_name='category',choices=CAT)

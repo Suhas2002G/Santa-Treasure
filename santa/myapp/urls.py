@@ -15,6 +15,8 @@ urlpatterns = [
     path('adminLogin', views.adminLogin),
     path('trackorder', views.trackorder),
     path('vieworder', views.vieworder),
+    path('sort/<x>', views.sort),
+    path('addaddress', views.addaddress),
     # path('addtocart/<pid>', views.addtocart),
 
 
