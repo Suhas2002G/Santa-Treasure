@@ -3,7 +3,7 @@
 {% block 'main' %}
 
 <!-- Carousel Section -->
-<div class="upperHeight" style="margin-top: 67px;">
+<div class="upperHeight">
 <div id="carouselExample" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
@@ -103,7 +103,7 @@
 
 
   <!-- Gifts Page with Filter Section -->
-<div class="container mt-3">
+<div class="container mt-3 fixed">
     <div class="row">
       <!-- Filter Section -->
       <div class="col-md-3 ">
@@ -151,11 +151,11 @@
       </div>
   
       <!-- Products Section -->
-      <div class="col-md-9">
-        <div class="row justify-content-center">
+      <div class="col-md-9 ">
+        <div class="row justify-content-center ">
           <!-- Dynamic Gift Cards -->
           {% for i in data %}
-          <div class="col-lg-4 col-md-6 col-sm-6 mb-4">
+          <div class="col-lg-4 col-md-6 col-sm-6 mb-4 ">
             <div class="card gift-card">
               <img src="{{ i.image.url }}" class="card-img-top" alt="{{ i.name }}" />
               <div class="card-body text-center">

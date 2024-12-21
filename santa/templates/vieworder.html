@@ -24,20 +24,21 @@
           </tr>
         </thead>
         <tbody>
-          {% for item in order_items %}
+          <!-- {% for i in data %} -->
             <tr>
-              <td>{{ item.product.name }}</td>
-              <td>{{ item.quantity }}</td>
-              <td>{{ item.total_price }}</td>
+              <td>OD101</td>
+              <td>Denim 36 inch</td>
+              <td>3</td>
+              <td>699</td>
             </tr>
-          {% endfor %}
+          <!-- {% endfor %} -->
         </tbody>
       </table>
     </div>
 
     <div class="delivery-address">
       <h2>Delivery Address</h2>
-      <p><strong>Address:</strong> {{ order.delivery_address }}</p>
+      <p><strong>Address:</strong>A14 Manikgad Sector 112 Bhosari</p>
       <p><strong>City:</strong> {{ order.city }}</p>
       <p><strong>Postal Code:</strong> {{ order.postal_code }}</p>
 
