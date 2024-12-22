@@ -66,7 +66,7 @@ def user_logout(request):
 # User Profile Page
 def myprofile(request):
     context={}
-    a=Address.objects.filter(id=request.user.id)    # Fetch details of Authenticated User
+    a=User.objects.filter(id=request.user.id)    # Fetch details of Authenticated User
 
     context['data']=a
     return render(request,'profile.html',context)
@@ -108,33 +108,6 @@ def gifts(request):
     context['data']=g
     return render(request,'gifts.html',context)
 
-# Add to Cart Functionality
-# def addtocart(request,pid):
-#     context={}
-#     if request.user.is_authenticated :  #check whether is login or not (if not then reddirect to login page)
-#         # print('User is logged in')
-#         u=User.objects.filter(id=request.user.id)       #used to get id of authenticated user id
-#         # print(u)
-#         p=Gifts.objects.filter(id=pid)
-        
-#         q1=Q(uid=u[0])
-#         q2=Q(pid=p[0])
-#         c=Cart.objects.create(uid=q1,pid=q2)
-#         n=len(c)
-#         if n==0:
-#             c=Cart.objects.create(pid=p[0],uid=u[0])         #import cart
-#             c.save()
-#             context['success']='Product Added Successfully...!'
-#         else:
-#             context['errormsg']='Product Already Exist in Cart..!'
-  
-#         context['data']=p
-#         return render(request,'gifts.html',context)
-    
-#     else:
-#         return redirect('/login')
-    
-
 
 # Sort by Price [high->low or low->high]: 
 def sort(request,x):
@@ -148,18 +121,99 @@ def sort(request,x):
     return render(request,'gifts.html',context)
 
 
+# Search products
+def search(request):
+    s=request.GET['srch']
+    #print(s)
+    p=Gifts.objects.filter(name__icontains=s)
+    #print(p)
+    p1=Gifts.objects.filter(pdetails__icontains=s)
+
+    allprod=p.union(p1)
+    context={}
+    if len(allprod)!=0:
+        context['data']=allprod
+    else:
+        context['errmsg']='Product Not Found'
+    return render(request,'gifts.html',context)
 
 
+# Gift Detail Page
+def giftdetail(request,pid):
+    p=Gifts.objects.filter(id=pid)
+    context={}
+    context['data']=p
+    return render(request, 'giftdetail.html', context)
 
 
+# Add to Cart Functionaliy
+def addtocart(request, pid):
+    context={}
+    if request.user.is_authenticated :  #check whether is login or not (if not then re-direct to login page)
+        # print('User is logged in')
+        u=User.objects.filter(id=request.user.id)       #used to get id of authenticated user id
+        # print(u)
+        p=Gifts.objects.filter(id=pid)
+        
+        q1=Q(uid=u[0])
+        q2=Q(pid=p[0])
+        c=Cart.objects.filter(q1 & q2)
+        n=len(c)
+        if n==0:
+            c=Cart.objects.create(pid=p[0],uid=u[0])         #import cart
+            c.save()
+            context['success']='Product Added Successfully...!'
+        else:
+            context['errormsg']='Product Already Exist in Cart..!'
+  
+        context['data']=p
+        return render(request,'giftdetail.html',context)
+    
+    else:
+        return redirect('/login')
+    
 
 
+# View Cart functionality 
+def viewcart(request):
+    context={}
+    c=Cart.objects.filter(uid=request.user.id)  
+    #from cart table we have to fetched data of requested-authenticated user
+    a=Address.objects.filter(uid=request.user.id) 
+
+    amt=0
+    for i in c:
+        amt = amt + i.pid.price * i.qty
+    
+    # context['totalamt']=amt
+    # context['data']=c
+    # context['data1']=a
+    context={
+        'data': c,
+        'data1': a,
+        'totalamt': amt
+    }
+    return render(request, 'cart.html', context)
 
 
+# update quntity funcntinality
+def updateqty(request,x,cid):
+    c=Cart.objects.filter(id=cid)
+    # print(c)      # display all cart products of authenticated user
+    q=c[0].qty      # 
+    if x=='1' :         #add qty functionality
+        q=q+1
+    elif q>1:           #decrease qty functionality
+        q=q-1   
+    c.update(qty=q)
+    return redirect('/viewcart')
 
 
-
-
+# Remove Product from cart 
+def remove(request, cid):
+    c=Cart.objects.filter(id=cid)
+    c.delete()
+    return redirect('/viewcart')
 
 
 

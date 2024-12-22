@@ -64,20 +64,19 @@
 
 
 <!-- Search Bar Section -->
+ <form action="/search">
     <div class="search-bar">
-      <input type="text" placeholder="Search for items..." class="search-input" />
+      <input type="text" name="srch" placeholder="Search for items..." class="search-input" />
       <button class="search-btn">Search</button>
     </div>
+  </form>
   <!-- </div> -->
 
 
 <!-- category circle  -->
 <div class="container-circle">
   <div class="categories-circle">
-      <div class="category-circle">
-          <img src="cloth.jpg" alt="Cloth">
-          <p>Cloths</p>
-      </div>
+      
       <div class="category-circle">
           <img src="shoes.jpg" alt="Shoes">
           <p>Santa Claus</p>
@@ -87,13 +86,13 @@
           <p>Chrismas Tree</p>
       </div>
       <div class="category-circle">
-          <img src="accessories.jpg" alt="Accessories">
-          <p>Santa Accessories</p>
+          <img src="beauty.jpg" alt="Beauty">
+          <p>Decorations</p>
       </div>
       <div class="category-circle">
-          <img src="beauty.jpg" alt="Beauty">
-          <p>Beauty</p>
-      </div>
+        <img src="cloth.jpg" alt="Cloth">
+        <p>Cloths</p>
+    </div>
   </div>
 </div>
 <!-- category circle ends -->
@@ -103,7 +102,7 @@
 
 
   <!-- Gifts Page with Filter Section -->
-<div class="container mt-3 fixed">
+<div class="container mt-3 ">
     <div class="row">
       <!-- Filter Section -->
       <div class="col-md-3 ">
@@ -152,6 +151,13 @@
   
       <!-- Products Section -->
       <div class="col-md-9 ">
+        <!-- if product is not found then display error msg -->
+        {% if errmsg %}
+            <div class="alert alert-danger" role="alert">
+                {{errmsg}}
+            </div>
+        {% endif %}
+
         <div class="row justify-content-center ">
           <!-- Dynamic Gift Cards -->
           {% for i in data %}
@@ -162,10 +168,12 @@
                 <h5 class="gift-name">{{ i.name }}</h5>
                 <p class="gift-description">{{ i.pdetails }}</p>
                 <p class="gift-price"><i class="bi bi-currency-rupee"></i>{{ i.price }}</p>
-                <a href="" class="btn btn-custom add-to-cart js-add-to-cart" onclick="addToCart(this)">
+                <!-- <a href="" class="btn btn-custom add-to-cart js-add-to-cart" onclick="addToCart(this)">
                   <i class="bi bi-cart-plus"></i> Add to Cart
-                </a>
-                <!-- /addtocart/{{i.id}} -->
+                </a> -->
+                <a href="/giftdetail/{{i.id}}" class="btn btn-custom add-to-cart">
+                  <i class="bi bi-cart-plus"></i>See Detail</a>
+                
               </div>
             </div>
           </div>

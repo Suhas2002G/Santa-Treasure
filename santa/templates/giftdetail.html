@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+
+
+<div class="product-detail-container">
+    <div class="product-detail-card">
+        {% for i in data %}
+        <div class="product-row">
+            <div class="product-image">
+                <img src="{{ i.image.url }}" alt="Product Image">
+            </div>
+            <div class="product-info">
+                {% if success %}
+                    <div class="alert alert-success">{{ success }}</div>
+                {% endif %}
+
+                {% if errormsg %}
+                    <div class="alert alert-danger">{{ errormsg }}</div>
+                {% endif %}
+
+                <h2 class="product-name">{{ i.name }}</h2>
+                <p class="product-category">
+                    <strong>Category:</strong>
+                    {% if i.cat == 1 %} Santa Status
+                    {% elif i.cat == 2 %} Christmas Tree
+                    {% elif i.cat == 3 %} Decorations
+                    {% else %} Cloths
+                    {% endif %}
+                </p>
+                <p class="product-detail"><strong>Details:</strong> {{ i.pdetails }}</p>
+                <p class="product-price"><strong>Price:</strong> Rs. {{ i.price }}</p>
+                
+                <div class="action-buttons">
+                    <a href="/addtocart/{{ i.id }}" class="btn btn-add-cart">Add to Cart</a>
+                    <a href="/viewcart" class="btn btn-view-cart">View Cart</a>
+                    <a href="/gifts" class="btn btn-shop-more">Shop More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock 'main' %}

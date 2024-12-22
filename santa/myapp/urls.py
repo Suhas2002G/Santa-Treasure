@@ -17,7 +17,12 @@ urlpatterns = [
     path('vieworder', views.vieworder),
     path('sort/<x>', views.sort),
     path('addaddress', views.addaddress),
-    # path('addtocart/<pid>', views.addtocart),
+    path('search', views.search),
+    path('giftdetail/<pid>', views.giftdetail),
+    path('addtocart/<pid>', views.addtocart),
+    path('viewcart', views.viewcart),
+    path('updateqty/<x>/<cid>',views.updateqty),
+    path('remove/<cid>',views.remove),
 
 
 

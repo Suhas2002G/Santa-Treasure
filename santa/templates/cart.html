@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'main' %}
+
+<div class="cart-container">
+    <div class="cart-content">
+        <!-- Customer Detail Section -->
+        <div class="customer-details">
+            {% for i in data %}
+                {% if forloop.counter == 1 %}
+                    <h3>Customer Details</h3>
+                    <hr>
+                    <p><strong>Name:</strong> {{ i.uid.first_name }}</p>
+                    <p><strong>Email:</strong> {{ i.uid.email }}</p>
+                    <p><strong>Address:</strong> </p>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Product Details Section -->
+        <div class="cart-items">
+            <h3>Cart Items</h3>
+            {% for i in data %}
+            <div class="cart-item">
+                <div class="item-image">
+                    <img src="{{ i.pid.image.url }}" alt="Product Image">
+                </div>
+                <div class="item-details">
+                    <p><strong>Product:</strong> {{ i.pid.name }}</p>
+                    <p><strong>Category:</strong> 
+                        {% if i.pid.cat == 1 %} Santa Statue 
+                        {% elif i.pid.cat == 2 %} Christmas Tree 
+                        {% elif i.pid.cat == 3 %} Decorations 
+                        {% else %} Cloths 
+                        {% endif %}
+                    </p>
+                    <p><strong>Details:</strong> {{ i.pid.pdetails }}</p>
+                    <p><strong>Price (per item):</strong> Rs.{{ i.pid.price }}</p>
+                    <div class="quantity-control">
+                        <a href="/updateqty/0/{{ i.id }}" class="qty-btn">-</a>
+                        <input type="text" value="{{ i.qty }}" class="qty-input" readonly>
+                        <a href="/updateqty/1/{{ i.id }}" class="qty-btn">+</a>
+                    </div>
+                    <a href="/remove/{{ i.id }}" class="remove-btn">Remove</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        
+    </div>
+</div>
+
+{% endblock 'main' %}
