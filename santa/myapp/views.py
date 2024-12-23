@@ -2,8 +2,10 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
-from myapp.models import Gifts,Cart,Address
-from django.db.models import Q          
+from myapp.models import Gifts,Cart,Address,Order,OrderHistory
+from django.db.models import Q     
+import razorpay 
+from django.core.mail import send_mail     
 
 
 # Home page
@@ -64,16 +66,28 @@ def user_logout(request):
     return redirect('/')
 
 # User Profile Page
+# def myprofile(request):
+#     context={}
+#     a=User.objects.filter(id=request.user.id)    
+
+#     context['data']=a
+#     return render(request,'profile.html',context)
 def myprofile(request):
-    context={}
-    a=User.objects.filter(id=request.user.id)    # Fetch details of Authenticated User
+    user = request.user  # Get the currently logged-in user
+    try:
+        address = Address.objects.get(uid=user)  # Fetch the address associated with the user
+    except Address.DoesNotExist:
+        address = None  # Handle if the user has no address
 
-    context['data']=a
-    return render(request,'profile.html',context)
-
+    context = {
+        'user': user,
+        'address': address,
+    }
+    return render(request, 'profile.html', context)
 
 # Add Address/Phone
 def addaddress(request):
+    context={}
     if request.method == 'GET':
         return render(request, 'addaddress.html')
     else:       # Retrieve form data
@@ -83,21 +97,22 @@ def addaddress(request):
         postal_code = request.POST['postal_code']
         phone = request.POST.get('phone', '')
 
-        # Ensure the user is authenticated
-        if request.user.is_authenticated:
-            # Create the address object and associate it with the user instance
-            Address.objects.create(
-                uid=request.user,  # Pass the User instance directly
-                street_address=street_address,
-                city=city,
-                state=state,
-                postal_code=postal_code,
-                phone=phone
-            )
-            return redirect('/myprofile')
+        if street_address=='' or city=='' or state=='' or postal_code=='' or phone=='':
+            context['errormsg']='Please fill all the fields'
         else:
-            # If user is not authenticated, redirect to login page
-            return redirect('login')  # Adjust to your login URL name
+            if request.user.is_authenticated:
+                Address.objects.create(
+                    uid=request.user,  
+                    street_address=street_address,
+                    city=city,
+                    state=state,
+                    postal_code=postal_code,
+                    phone=phone
+                )
+                return redirect('/myprofile')
+            else:
+                # If user is not authenticated, redirect to login page
+                return redirect('login')  # Adjust to your login URL name
 
 
 
@@ -179,7 +194,7 @@ def viewcart(request):
     context={}
     c=Cart.objects.filter(uid=request.user.id)  
     #from cart table we have to fetched data of requested-authenticated user
-    a=Address.objects.filter(uid=request.user.id) 
+    address = Address.objects.get(uid=request.user.id) 
 
     amt=0
     for i in c:
@@ -190,7 +205,7 @@ def viewcart(request):
     # context['data1']=a
     context={
         'data': c,
-        'data1': a,
+        'address': address,
         'totalamt': amt
     }
     return render(request, 'cart.html', context)
@@ -215,6 +230,78 @@ def remove(request, cid):
     c.delete()
     return redirect('/viewcart')
 
+
+
+def place_order(request):
+    c=Cart.objects.filter(uid=request.user.id)
+    # print(c)
+#since c return list we have eto use for loop so that each dict will be stored in order table 
+    for i in c:
+        o=Order.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.qty*i.pid.price)
+        o.save()
+        i.delete()   #when each single record is insereted then it should be get deleted
+    return redirect('/fetchorder')
+ 
+
+def fetchorder(request):
+    context={}
+    o=Order.objects.filter(uid=request.user.id)
+    amt=0
+    for i in o:
+        amt = amt + i.totalamt
+    
+    context['finalamt']=amt
+    context['data']=o
+    return render(request, 'pay.html', context )
+
+
+
+def makepayment(request):
+    context={}
+    client = razorpay.Client(auth=("rzp_test_c66P03WlENQIxJ", "Om1tOy0A2HuYZUT0rHFnZgTd"))
+
+    o=Order.objects.filter(uid=request.user.id)   #calculate the total amount to pay and add amt to dict
+    amt=0
+    for i in o:
+        amt = amt + i.totalamt
+
+    amt=amt*100 # to convert amount to paise 
+
+    data = { "amount": amt, "currency": "INR", "receipt": "order_rcptid_11" }
+    payment = client.order.create(data=data)
+    context['payment']=payment
+    #print(payment)      #check whether amount is printing on terminal 
+    # return HttpResponse("Amount Fetched")
+
+#after makepayment data should be deleted from order table and 
+#inserted into orderhistory table
+    c=Order.objects.filter(uid=request.user.id)
+    for i in c:
+        o=OrderHistory.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.totalamt)
+        o.save()
+        i.delete() 
+
+    return render(request, 'pay.html', context)
+    
+
+
+#paymentsuccess page after placing order
+def paymentsuccess(request):
+    sub="Santa's Treasure Order Status"
+    msg="Your order has been successfully placed! Estimated delivery is within 3-4 days. Thank you for shopping with us!"
+    frm='suhas8838@gmail.com'
+
+    u=User.objects.filter(id=request.user.id)       #email should go to authenticated user only 
+    to=u[0].email
+
+    send_mail(
+        sub,
+        msg,
+        frm,
+        [to],               #list beacause we can send mail to multiple emails-ids
+        fail_silently=False
+    )
+    return render(request, 'paymentsuccess.html')
 
 
 
@@ -249,6 +336,8 @@ def adminLogin(request):
 # Dashboard Page for Admin
 def dashboard(request):
     context={}
+    o=Order.objects.all()
+    context['data']=o
     return render(request,'dashboard.html',context)
 
 

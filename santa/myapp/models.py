@@ -16,6 +16,20 @@ class Cart(models.Model):
     pid=models.ForeignKey('Gifts',on_delete=models.CASCADE, db_column='pid')       #Gift is part of same model file 
     qty=models.IntegerField(default=1)
 
+
+class Order(models.Model):
+    uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')    #since user table is part auth_user, we have to import it
+    pid=models.ForeignKey('Gifts',on_delete=models.CASCADE, db_column='pid')       #Product is part of same model file 
+    qty=models.IntegerField(default=1)
+    totalamt=models.IntegerField()
+    # aid=models.ForeignKey('Address',on_delete=models.CASCADE, db_column='aid' )
+
+class OrderHistory(models.Model):
+    uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')    #since user table is part auth_user, we have to import it
+    pid=models.ForeignKey('Gifts',on_delete=models.CASCADE, db_column='pid')       #Product is part of same model file 
+    qty=models.IntegerField(default=1)
+    totalamt=models.IntegerField()
+
 class Address(models.Model):
     uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')
     street_address = models.TextField()  # Street address

@@ -23,6 +23,10 @@ urlpatterns = [
     path('viewcart', views.viewcart),
     path('updateqty/<x>/<cid>',views.updateqty),
     path('remove/<cid>',views.remove),
+    path('place_order',views.place_order),
+    path('fetchorder',views.fetchorder),
+    path('makepayment',views.makepayment),
+    path('paymentsuccess',views.paymentsuccess),
 
 
 

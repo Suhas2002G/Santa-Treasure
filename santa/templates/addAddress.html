@@ -4,6 +4,11 @@
 
 <div class="address-form-container">
     <h2>Enter Your Address</h2>
+    {% if errormsg %}
+    <div class="alert alert-danger custom-alert" role="alert">
+      <i class="bi bi-x-circle"></i> {{ errormsg }}
+    </div>
+    {% endif %}
     <form method="post" action="">
         {% csrf_token %}
         <div class="form-group">

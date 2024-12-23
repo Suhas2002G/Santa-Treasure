@@ -817,6 +817,7 @@
 /* myprofile starts  */
 .profile-container {
   max-width: 900px;
+  /* height: 500px; */
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -838,6 +839,7 @@
 }
 
 .profile-card {
+  height: 270px;
   display: flex;
   align-items: center;
   background: #fff;

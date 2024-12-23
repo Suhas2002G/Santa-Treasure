@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Gmail Integration settings
+EMAIL_HOST='smtp.gmail.com'             #smtp : send mail transfer protocol
+EMAIL_HOST_USER='suhas8838@gmail.com'
+EMAIL_HOST_PASSWORD='rftf gotx qxwz oawj'
+EMAIL_PORT= 587         # default port of email
+EMAIL_USE_TLS=True          #TLS : Transport Layer Security is used to provide security
+EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 # Application definition
 

@@ -3,31 +3,31 @@
 {% block 'main' %}
 
 <div class="profile-container">
-  <div class="profile-header">
-      <h1>My Profile</h1>
-      <p>Manage your account information</p>
-  </div>
+    <div class="profile-header">
+        <h1>My Profile</h1>
+        <p>Manage your account information</p>
+    </div>
 
-  {% for i in data %}
-  <div class="profile-card">
-      <div class="profile-avatar">
-          <img src="{% static 'images/profilepng.jpg' %}" alt="User Avatar">
-      </div>
-      <div class="profile-info">
-          <p><i class="fas fa-user"></i> <strong>Name:</strong> {{ i.first_name }}</p>
-          <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ i.email }}</p>
+    <div class="profile-card">
+        <div class="profile-avatar">
+            <img src="{% static 'images/profilepng.jpg' %}" alt="User Avatar">
+        </div>
+        <div class="profile-info">
+            <p><i class="fas fa-user"></i> <strong>Name:</strong> {{ user.first_name }}</p>
+            <p><i class="fas fa-envelope"></i> <strong>Email:</strong> {{ user.email }}</p>
+            <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {{ address.phone|default:"Not provided" }}</p>
+            <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 
+                {{ address.street_address|default:"Not provided" }}
+                {{ address.city }}
+                {{ address.state }}
+                {{ address.postal_code }}
+            </p>
 
-          <p><i class="fas fa-phone"></i><strong>Phone:</strong>{{ i.phone|default:"Not provided" }}</p>
-          <p><i class="fas fa-map-marker-alt"></i><strong>Address:</strong> 
-            {{ i.street_address|default:"Not provided" }} {{ i.city|default:"" }}
-          </p>
-          
-          {% if not i.phone %}
-          <a href="/addaddress" class="btn btn-add-address">Add Address/Phone</a>
-          {% endif %}
-      </div>
-  </div>
-  {% endfor %}
+            {% if not address %}
+            <a href="/addaddress" class="btn btn-add-address">Add Address/Phone</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 {% endblock 'main' %}

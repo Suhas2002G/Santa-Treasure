@@ -12,7 +12,7 @@
                     <hr>
                     <p><strong>Name:</strong> {{ i.uid.first_name }}</p>
                     <p><strong>Email:</strong> {{ i.uid.email }}</p>
-                    <p><strong>Address:</strong> </p>
+                    <p><strong>Address:</strong>{{address.street_address}} {{address.city}} {{address.state}} {{address.postal_code}} </p>
                 {% endif %}
             {% endfor %}
         </div>
@@ -47,8 +47,26 @@
             {% endfor %}
         </div>
 
+
+        
         
     </div>
+    <div class="cart-summary-container card p-4 shadow-sm mb-4">
+        <h5 class="card-title text-primary">Cart Summary</h5>
+        <hr>
+        <div class="cart-total d-flex justify-content-between align-items-center">
+            <p class="font-weight-bold">Total Cart Value:</p>
+            <p class="text-danger font-weight-bold">Rs.{{totalamt}}</p>
+        </div>
+        <div class="text-center mt-3">
+            <a href="/place_order">
+                <button class="btn btn-success btn-block">
+                    Place Order
+                </button>
+            </a>
+        </div>
+    </div>
 </div>
+
 
 {% endblock 'main' %}

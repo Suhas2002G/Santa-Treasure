@@ -49,15 +49,17 @@
             </tr>
         </thead>
         <tbody>
+            {% for i in data %}
             <!-- Dummy Order 1 -->
             <tr>
-                <td>1001</td>
+                <td>{{i.id}}</td>
                 <td>2024-12-18</td>
                 <td>Pending</td>
-                <td>New York</td>
-                <td>John Doe</td>
+                <td>{{i.}}</td>
+                <td>{{i.uid.first_name}}</td>
                 <td><a href="/vieworder" class="btn btn-primary">View</a></td>
             </tr>
+            {% endfor %}
             <!-- Dummy Order 2 -->
             <tr>
                 <td>1002</td>
