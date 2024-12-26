@@ -1,8 +1,9 @@
+from pyexpat.errors import messages
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
-from myapp.models import Gifts,Cart,Address,Order,OrderHistory
+from myapp.models import Gifts,Cart,Address,Order
 from django.db.models import Q     
 import razorpay 
 from django.core.mail import send_mail     
@@ -231,17 +232,43 @@ def remove(request, cid):
     return redirect('/viewcart')
 
 
-
+# Place Order Page Logic
+# def place_order(request):
+#     c=Cart.objects.filter(uid=request.user.id)
+#     a=Address.objects.filter(uid=request.user.id)
+#     print(a)
+#     for i in c:
+#         o=Order.objects.create(
+#             pid=i.pid, 
+#             uid=i.uid, 
+#             qty=i.qty, 
+#             totalamt=i.qty*i.pid.price,
+#             aid=a.id
+#         )
+#         o.save()
+#         i.delete()  
+#     return redirect('/fetchorder')
 def place_order(request):
-    c=Cart.objects.filter(uid=request.user.id)
-    # print(c)
-#since c return list we have eto use for loop so that each dict will be stored in order table 
+    c = Cart.objects.filter(uid=request.user.id)  # Fetch all cart items for the user
+    a = Address.objects.filter(uid=request.user.id).first()  # Fetch the first address for the user
+
+    if not a:  # If no address is found
+        messages.error(request, "Please add an address before placing an order.")
+        return redirect('/cart')  # Redirect to cart if no address is found
+
     for i in c:
-        o=Order.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.qty*i.pid.price)
-        o.save()
-        i.delete()   #when each single record is insereted then it should be get deleted
-    return redirect('/fetchorder')
- 
+        o = Order.objects.create(
+            pid=i.pid,  # Product ID from the Cart item
+            uid=i.uid,  # User ID from the Cart item
+            qty=i.qty,  # Quantity from the Cart item
+            totalamt=i.qty * i.pid.price,  # Total amount: qty * product price
+            aid=a  # Use the address ID of the first address for the user
+        )
+        o.save()  # Save the order
+        i.delete()  # Remove the cart item after the order is created
+    
+    return redirect('/fetchorder')  # Redirect to order confirmation or order listing page
+
 
 def fetchorder(request):
     context={}
@@ -270,16 +297,12 @@ def makepayment(request):
     data = { "amount": amt, "currency": "INR", "receipt": "order_rcptid_11" }
     payment = client.order.create(data=data)
     context['payment']=payment
-    #print(payment)      #check whether amount is printing on terminal 
-    # return HttpResponse("Amount Fetched")
 
-#after makepayment data should be deleted from order table and 
-#inserted into orderhistory table
     c=Order.objects.filter(uid=request.user.id)
-    for i in c:
-        o=OrderHistory.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.totalamt)
-        o.save()
-        i.delete() 
+    # for i in c:
+    #     o=OrderHistory.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.totalamt)
+    #     o.save()
+    #     i.delete() 
 
     return render(request, 'pay.html', context)
     
@@ -335,18 +358,56 @@ def adminLogin(request):
 
 # Dashboard Page for Admin
 def dashboard(request):
-    context={}
-    o=Order.objects.all()
-    context['data']=o
-    return render(request,'dashboard.html',context)
+    # Fetch orders with related user and address data
+    orders = Order.objects.select_related('uid').prefetch_related(
+        'uid__address_set'
+    )
+    context = {
+        'data': orders,
+    }
+    return render(request, 'dashboard.html', context)
+# demo :
+# def dashboard(request):
+#     context={}
+#     o=Order.objects.all()
+#     for i in o:
+#         # print(i.uid)
+#         a=Address.objects.filter(uid=i.uid)
+#         print(a)
+#     context['data']=o
+#     context['address']=a
+#     return render(request,'dashboard.html',context)
+
 
 
 # Track Order Page for Admin
 def trackorder(request):
-    context={}
-    return render(request, 'trackorder.html', context)
+    context = {}
+    if request.method == 'GET':
+        return render(request, 'trackorder.html')
+    else:
+        tid = request.POST.get('trackingid')  # Use .get() to avoid KeyError
+        
+        if not tid:
+            context['errormsg'] = 'Please Enter Tracking ID'
+            return render(request, 'trackorder.html', context)
+        else:
+            o = Order.objects.filter(id=tid)
+            if o.exists(): 
+                context['data'] = o 
+            else:
+                context['errormsg'] = 'Tracking ID Not Found'  
+
+        return render(request, 'trackorderOutput.html', context)
+
+    
+
+    # return render(request, 'trackorder.html', context)
 
 # View Order Page for Admin
-def vieworder(request):
+def vieworder(request,oid):
     context={}
+    order_detail=Order.objects.filter(id=oid)
+    context['data']=order_detail
+    print(order_detail)
     return render(request, 'vieworder.html', context)

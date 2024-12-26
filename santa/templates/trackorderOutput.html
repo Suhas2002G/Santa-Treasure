@@ -1,0 +1,38 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block 'main' %}
+<div class="track-container">
+    <div class="tracking-card">
+        <div class="card-header">
+            <h3>Track Your Courier</h3>
+        </div>
+        <div class="card-body">
+            <form class="tracking-form">
+                {% for i in data %}
+                <label for="tracking-number" class="input-label">Tracking Number:</label>
+                <input type="text" id="tracking-number" class="input-field" name="trackingid" placeholder={{i.id}} >
+                <button type="submit" class="track-btn">Track</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="tracking-details">
+        <div class="detail-card">
+            <h4>Customer Information</h4>
+            
+            <p><strong>Customer Name:</strong> <span class="detail-value">{{i.uid.first_name}}</span></p>
+            <p><strong>Tracking Number:</strong> <span class="detail-value">{{i.id}}</span></p>
+            <p><strong>Delivery Status:</strong> <span class="status-in-progress">In Progress</span></p>
+            <p><strong>Location:</strong> <span class="detail-value">{{i.aid.street_address}} {{i.aid.city}} {{i.aid.postal_code}}</span></p>
+            {% endfor %}
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-btn cancel-btn">Cancel Delivery</button>
+            <button class="action-btn contact-btn">Mark as Deliver</button>
+        </div>
+    </div>
+</div>
+{% endblock 'main' %}
+

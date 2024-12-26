@@ -5,10 +5,11 @@
 <div class="order-container">
     <div class="customer-details">
       <h2>Customer Details</h2>
+      {% for i in data %}
       <div class="customer-info">
-        <p><strong>Name:</strong> {{ customer.name }}</p>
-        <p><strong>Email:</strong> {{ customer.email }}</p>
-        <p><strong>Phone:</strong> {{ customer.phone }}</p>
+        <p><strong>Name:</strong> {{ i.uid.first_name }}</p>
+        <p><strong>Email:</strong> {{ i.uid.email }}</p>
+        <p><strong>Phone:</strong> {{ i.aid.phone }}</p>
       </div>
     </div>
 
@@ -26,10 +27,10 @@
         <tbody>
           <!-- {% for i in data %} -->
             <tr>
-              <td>OD101</td>
-              <td>Denim 36 inch</td>
-              <td>3</td>
-              <td>699</td>
+              <td>{{i.pid.id}}</td>
+              <td>{{i.pid.name}}</td>
+              <td>{{i.qty}}</td>
+              <td>{{i.totalamt}}</td>
             </tr>
           <!-- {% endfor %} -->
         </tbody>
@@ -38,10 +39,10 @@
 
     <div class="delivery-address">
       <h2>Delivery Address</h2>
-      <p><strong>Address:</strong>A14 Manikgad Sector 112 Bhosari</p>
-      <p><strong>City:</strong> {{ order.city }}</p>
-      <p><strong>Postal Code:</strong> {{ order.postal_code }}</p>
-
+      <p><strong>Address:</strong>{{ i.aid.street_address}}</p>
+      <p><strong>City:</strong>{{ i.aid.city }} {{ i.aid.state }}</p>
+      <p><strong>Postal Code:</strong>  {{ i.aid.postal_code }}</p>
+{% endfor %}
       <!-- Embedded Google Map -->
       <div class="map-container">
         <iframe 
