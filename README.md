@@ -55,8 +55,8 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
 
 - **Backend:**
   - Python (Flask/Django)
-  - Route Optimization (Google OR-Tools or Travelling Salesman Problem)
-  - **Razorpay API** (for payment integration)
+  - Route Optimization (Google Map Place API)
+  - Razorpay API (for payment integration)
   - OTP Verification (using email services of SMTP)
 
 - **Database:**
