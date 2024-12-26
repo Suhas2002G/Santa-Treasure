@@ -4,11 +4,12 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
-from myapp.models import Gifts,Cart,Address,Order,OTP,DeliveryStatus
+from myapp.models import Gifts,Cart,Address,Order,OTP
 from django.db.models import Q     
 import razorpay 
 from django.core.mail import send_mail    
 import random 
+import os
 
 
 # Home page
@@ -234,22 +235,7 @@ def remove(request, cid):
     return redirect('/viewcart')
 
 
-# Place Order Page Logic
-# def place_order(request):
-#     c=Cart.objects.filter(uid=request.user.id)
-#     a=Address.objects.filter(uid=request.user.id)
-#     print(a)
-#     for i in c:
-#         o=Order.objects.create(
-#             pid=i.pid, 
-#             uid=i.uid, 
-#             qty=i.qty, 
-#             totalamt=i.qty*i.pid.price,
-#             aid=a.id
-#         )
-#         o.save()
-#         i.delete()  
-#     return redirect('/fetchorder')
+# Place Order Page
 def place_order(request):
     c = Cart.objects.filter(uid=request.user.id)  # Fetch all cart items for the user
     a = Address.objects.filter(uid=request.user.id).first()  # Fetch the first address for the user
@@ -287,7 +273,9 @@ def fetchorder(request):
 
 def makepayment(request):
     context={}
-    client = razorpay.Client(auth=("rzp_test_c66P03WlENQIxJ", "Om1tOy0A2HuYZUT0rHFnZgTd"))
+    # os.environ.get['razorpay_api'] = Your Razorpay API
+    # os.environ.get['razorpay_api_key'] = Your Razorpay API Password
+    client = razorpay.Client(auth=(os.environ.get['razorpay_api'], os.environ.get['razorpay_api_key']))
 
     o=Order.objects.filter(uid=request.user.id)   #calculate the total amount to pay and add amt to dict
     amt=0
@@ -360,31 +348,40 @@ def adminLogin(request):
 
 # Dashboard Page for Admin
 def dashboard(request):
+    total_orders = Order.objects.count()
+    pending_orders = Order.objects.filter(status='Pending').count()
+    delivered_orders = Order.objects.filter(status='Delivered').count()
+    
     # Fetch orders with related user and address data
     orders = Order.objects.select_related('uid').prefetch_related(
         'uid__address_set'
-    )
-
-    d=DeliveryStatus.objects.all() #status is stored in 
+    ).order_by('-created_at')
 
     context = {
         'data': orders,
-        'dstatus':d
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'delivered_orders': delivered_orders,
     }
     return render(request, 'dashboard.html', context)
-# demo :
-# def dashboard(request):
-#     context={}
-#     o=Order.objects.all()
-#     for i in o:
-#         # print(i.uid)
-#         a=Address.objects.filter(uid=i.uid)
-#         print(a)
-#     context['data']=o
-#     context['address']=a
-#     return render(request,'dashboard.html',context)
 
 
+# Filter based on delivery status
+def filter_status(request,sid):
+    context={}
+    if sid == '1':
+        o=Order.objects.all()
+        context['data']=o
+        return render(request, 'dashboard.html', context)
+    elif sid == '2' :
+        o=Order.objects.filter(status='Pending')
+        context['data']=o
+        print(o)
+        return render(request, 'dashboard.html', context)
+    elif sid == '3':
+        o=Order.objects.filter(status='Delivered')
+        context['data']=o
+        return render(request, 'dashboard.html', context)
 
 # Track Order Page for Admin
 def trackorder(request):
@@ -420,14 +417,14 @@ def vieworder(request,oid):
 
 
 def mark_as_deliver(request, order_id):
-    context={}
+    context = {}
     order = Order.objects.get(id=order_id)
     customer_email = order.uid.email
     
     # Generate a random 4-digit OTP
     otp = str(random.randint(1000, 9999))
 
-    # Set OTP expiration time (e.g., 10 minutes)
+    # Set OTP expiration time (optional)
     # expires_at = timezone.now() + timedelta(minutes=10)
 
     # Save OTP to the database
@@ -440,24 +437,22 @@ def mark_as_deliver(request, order_id):
     # Send OTP to customer email
     send_mail(
         'Your Order OTP',
-        f'Your OTP for [order-id {order.id}] is {otp}. Kindly share it at the time of delivery',
+        f'Your OTP for order ID {order.id} is {otp}. Kindly share it at the time of delivery.',
         'suhas8838@gmail.com',
         [customer_email],
         fail_silently=False,
     )
     
-    # Add a DeliveryStatus when the order is marked as delivered
-    DeliveryStatus.objects.create(
-        oid=order,
-        status="In Progress",  # The status when OTP is generated
-    )
+    # Update the order status to "In Progress" when OTP is generated
+    # order.status = 'In Progress'
+    # order.save()
     
-    return redirect('verify_otp', order_id=order.id)  # Redirect to OTP verification page
+    return redirect('verify_otp', order_id=order.id)
 
 
-
+# OTP verification 
 def verify_otp(request, order_id):
-    context={}
+    context = {}
     if request.method == 'POST':
         input_otp = request.POST['otp']
         try:
@@ -465,26 +460,20 @@ def verify_otp(request, order_id):
             
             # Check if the OTP is correct
             if input_otp == otp_entry.otp:
-                # Update the order status to delivered
+                # Update the order status to "Delivered"
                 order = otp_entry.oid
                 order.status = 'Delivered'
                 order.save()
 
-                # Create a new DeliveryStatus entry to mark the order as delivered
-                DeliveryStatus.objects.create(
-                    oid=order,
-                    status="Delivered"  # The status when the order is delivered
-                )
-                context['success_message']='Order delivered successfully!'
-                # messages.success(request, "Order delivered successfully!")
-                return redirect('/verify_otp', order_id=order.id)
+                context['success_message'] = 'Order delivered successfully!'
+                # return redirect(request, '/verify_otp', order_id=order.id)
+                return redirect('verify_otp', order_id=order.id)
             else:
-                context['error_message']='Incorrect OTP. Please try again.'
-                # messages.error(request, "Incorrect OTP. Please try again.")
-                return redirect('/verify_otp', order_id=order_id)
+                context['error_message'] = 'Incorrect OTP. Please try again.'
+                return redirect(request, '/verify_otp', order_id=order_id)
 
         except OTP.DoesNotExist:
             messages.error(request, "OTP not found. Please request a new one.")
-            return redirect('/trackorder')  # or any appropriate redirect
+            return redirect('/trackorder')  # Or any appropriate redirect
     
-    return render(request, 'verify_otp.html', {'order_id': order_id})
+    return render(request, 'verify_otp.html', {'order_id': order_id, 'context': context})

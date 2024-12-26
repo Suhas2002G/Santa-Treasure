@@ -26,6 +26,7 @@ urlpatterns = [
 
     path('adminLogin', views.adminLogin),
     path('dashboard', views.dashboard),
+    path('filter_status/<sid>', views.filter_status),
     path('trackorder', views.trackorder),
     path('vieworder/<oid>', views.vieworder),
     path('mark_as_deliver/<int:order_id>/', views.mark_as_deliver, name='mark_as_deliver'),

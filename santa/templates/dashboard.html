@@ -10,28 +10,34 @@
     <!-- Dashboard Cards -->
     <div class="row">
         <div class="col-md-4">
+        <a href="/filter_status/1" style="text-decoration: none;">
             <div class="card total-orders-card">
                 <div class="card-body">
                     <h5 class="dash-card-title">Total Orders</h5>
-                    <p class="dash-card-text">150</p>
+                    <p class="dash-card-text">{{total_orders}}</p>
                 </div>
             </div>
+        </a>
         </div>
         <div class="col-md-4">
+            <a href="/filter_status/2" style="text-decoration: none;">
             <div class="card pending-orders-card">
                 <div class="card-body">
                     <h5 class="dash-card-title">Pending Orders</h5>
-                    <p class="dash-card-text">30</p>
+                    <p class="dash-card-text">{{pending_orders}}</p>
                 </div>
             </div>
+        </a>
         </div>
         <div class="col-md-4">
+            <a href="/filter_status/3" style="text-decoration: none;">
             <div class="card delivered-orders-card">
                 <div class="card-body">
                     <h5 class="dash-card-title">Delivered Orders</h5>
-                    <p class="dash-card-text">120</p>
+                    <p class="dash-card-text">{{delivered_orders}}</p>
                 </div>
             </div>
+        </a>
         </div>
     </div>
 

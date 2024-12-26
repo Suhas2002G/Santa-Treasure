@@ -4,6 +4,18 @@
 <!-- OTP Verification Page -->
 <div class="otp-container">
     <div class="otp-card">
+        {% if success_message %}
+            <div class="alert alert-success text-center">
+                {{ success_message }}
+            </div>
+            <div class="text-center mt-3">
+                <h2>Order Status: <span class="text-success">Delivered</span></h2>
+            </div>
+        {% elif error_message %}
+            <div class="alert alert-danger text-center">
+                {{ error_message }}
+            </div>
+        {% endif %}
         <div class="otp-card-header">
             <h3>Verify OTP</h3>
             <p class="otp-description">Please enter the OTP sent to your email to proceed.</p>

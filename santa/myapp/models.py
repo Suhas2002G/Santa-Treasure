@@ -24,6 +24,7 @@ class Order(models.Model):
     totalamt=models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True) 
     aid=models.ForeignKey('Address',on_delete=models.CASCADE, db_column='aid', null=True)
+    status=models.CharField(max_length=50, default='Pending')
 
 
 
@@ -45,7 +46,7 @@ class OTP(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
 
-class DeliveryStatus(models.Model):
-    oid = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='delivery_status')  # Foreign key to Order model
-    status = models.CharField(max_length=50)  # Delivery status (In Progress, Delivered, Cancelled, etc.)
-    updated_at = models.DateTimeField(auto_now=True)  # Timestamp when the status was updated
+# class DeliveryStatus(models.Model):
+#     oid = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='delivery_status', db_column='oid')  
+#     status = models.CharField(max_length=50)  
+#     updated_at = models.DateTimeField(auto_now=True)

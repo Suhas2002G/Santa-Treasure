@@ -216,7 +216,6 @@
 .container-bg-register {
   background-image: url("https://cdn.britannica.com/38/196638-050-94E05EF4/Santa-Claus.jpg");
   background-size: cover;
-  margin-top: 50px;
   background-position: center;
   padding: 110px 0;
   height: 100vh; /* Full screen height */

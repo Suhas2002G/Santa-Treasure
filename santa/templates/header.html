@@ -49,13 +49,11 @@
             <li class="nav-item">
               <a class="nav-link" href="/gifts"><i class="bi bi-gift mx-2"></i>Gifts</a>
             </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" href="/dashboard"><i class="bi bi-clipboard-data mx-2"></i>Dashboard</a>
-            </li> -->
+            
+            {% if user.is_authenticated %}
             <li class="nav-item">
               <a class="nav-link" href="/viewcart"><i class="bi bi-cart mx-2"></i>Cart</a>
           </li>
-            {% if user.is_authenticated %}
             <li class="nav-item">
                 <a class="nav-link" href="/logout"><i class="bi bi-box-arrow-in-left mx-2"></i>Logout</a>
             </li>
