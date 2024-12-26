@@ -12,6 +12,24 @@ function addToCart(button) {
 }
 
 
+function markAsDeliver(orderId) {
+    // Send an AJAX request to the backend to send OTP
+    fetch(`/send_otp/${orderId}/`, {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('OTP sent successfully to customer email!');
+        } else {
+            alert('Failed to send OTP.');
+        }
+    });
+}
+
+function cancelDelivery() {
+    alert('Delivery canceled.');
+}
 
 
 

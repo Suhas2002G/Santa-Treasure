@@ -37,3 +37,15 @@ class Address(models.Model):
     phone = models.CharField(max_length=10, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of creation
     updated_at = models.DateTimeField(auto_now=True)  # Timestamp of last update
+
+class OTP(models.Model):
+    oid = models.ForeignKey('Order', on_delete=models.CASCADE, db_column='oid')
+    otp = models.CharField(max_length=4)
+    email = models.EmailField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+
+class DeliveryStatus(models.Model):
+    oid = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='delivery_status')  # Foreign key to Order model
+    status = models.CharField(max_length=50)  # Delivery status (In Progress, Delivered, Cancelled, etc.)
+    updated_at = models.DateTimeField(auto_now=True)  # Timestamp when the status was updated

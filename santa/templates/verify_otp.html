@@ -1,0 +1,31 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+{% block 'main' %}
+<!-- OTP Verification Page -->
+<div class="otp-container">
+    <div class="otp-card">
+        <div class="otp-card-header">
+            <h3>Verify OTP</h3>
+            <p class="otp-description">Please enter the OTP sent to your email to proceed.</p>
+        </div>
+        <div class="otp-card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="otp-input-group">
+                    <label for="otp" class="otp-input-label">Enter OTP:</label>
+                    <input type="text" id="otp" class="otp-input-field" name="otp" placeholder="Enter 4-digit OTP" required maxlength="4" autocomplete="off">
+                </div>
+                
+                <!-- Error or success message -->
+                {% if error_message %}
+                <div class="otp-error-message">{{ error_message }}</div>
+                {% elif success_message %}
+                <div class="otp-success-message">{{ success_message }}</div>
+                {% endif %}
+                
+                <button type="submit" class="otp-btn">Verify OTP</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock 'main' %}

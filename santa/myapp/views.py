@@ -1,12 +1,14 @@
 from pyexpat.errors import messages
+from django.http import JsonResponse
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
-from myapp.models import Gifts,Cart,Address,Order
+from myapp.models import Gifts,Cart,Address,Order,OTP,DeliveryStatus
 from django.db.models import Q     
 import razorpay 
-from django.core.mail import send_mail     
+from django.core.mail import send_mail    
+import random 
 
 
 # Home page
@@ -362,8 +364,12 @@ def dashboard(request):
     orders = Order.objects.select_related('uid').prefetch_related(
         'uid__address_set'
     )
+
+    d=DeliveryStatus.objects.all() #status is stored in 
+
     context = {
         'data': orders,
+        'dstatus':d
     }
     return render(request, 'dashboard.html', context)
 # demo :
@@ -411,3 +417,74 @@ def vieworder(request,oid):
     context['data']=order_detail
     print(order_detail)
     return render(request, 'vieworder.html', context)
+
+
+def mark_as_deliver(request, order_id):
+    context={}
+    order = Order.objects.get(id=order_id)
+    customer_email = order.uid.email
+    
+    # Generate a random 4-digit OTP
+    otp = str(random.randint(1000, 9999))
+
+    # Set OTP expiration time (e.g., 10 minutes)
+    # expires_at = timezone.now() + timedelta(minutes=10)
+
+    # Save OTP to the database
+    OTP.objects.create(
+        oid=order,
+        otp=otp,
+        email=customer_email,
+    )
+    
+    # Send OTP to customer email
+    send_mail(
+        'Your Order OTP',
+        f'Your OTP for [order-id {order.id}] is {otp}. Kindly share it at the time of delivery',
+        'suhas8838@gmail.com',
+        [customer_email],
+        fail_silently=False,
+    )
+    
+    # Add a DeliveryStatus when the order is marked as delivered
+    DeliveryStatus.objects.create(
+        oid=order,
+        status="In Progress",  # The status when OTP is generated
+    )
+    
+    return redirect('verify_otp', order_id=order.id)  # Redirect to OTP verification page
+
+
+
+def verify_otp(request, order_id):
+    context={}
+    if request.method == 'POST':
+        input_otp = request.POST['otp']
+        try:
+            otp_entry = OTP.objects.get(oid=order_id)
+            
+            # Check if the OTP is correct
+            if input_otp == otp_entry.otp:
+                # Update the order status to delivered
+                order = otp_entry.oid
+                order.status = 'Delivered'
+                order.save()
+
+                # Create a new DeliveryStatus entry to mark the order as delivered
+                DeliveryStatus.objects.create(
+                    oid=order,
+                    status="Delivered"  # The status when the order is delivered
+                )
+                context['success_message']='Order delivered successfully!'
+                # messages.success(request, "Order delivered successfully!")
+                return redirect('/verify_otp', order_id=order.id)
+            else:
+                context['error_message']='Incorrect OTP. Please try again.'
+                # messages.error(request, "Incorrect OTP. Please try again.")
+                return redirect('/verify_otp', order_id=order_id)
+
+        except OTP.DoesNotExist:
+            messages.error(request, "OTP not found. Please request a new one.")
+            return redirect('/trackorder')  # or any appropriate redirect
+    
+    return render(request, 'verify_otp.html', {'order_id': order_id})

@@ -7,14 +7,14 @@
       <h2>Customer Details</h2>
       {% for i in data %}
       <div class="customer-info">
-        <p><strong>Name:</strong> {{ i.uid.first_name }}</p>
-        <p><strong>Email:</strong> {{ i.uid.email }}</p>
-        <p><strong>Phone:</strong> {{ i.aid.phone }}</p>
+        <p><strong>Name : </strong> {{ i.uid.first_name }}</p>
+        <p><strong>Email : </strong> {{ i.uid.email }}</p>
+        <p><strong>Phone : </strong> {{ i.aid.phone }}</p>
       </div>
     </div>
 
     <div class="order-details">
-      <h2>Ordered Products</h2>
+      <h4>Ordered Products</h4>
       <table class="order-table">
         <thead>
           <tr>
@@ -38,10 +38,10 @@
     </div>
 
     <div class="delivery-address">
-      <h2>Delivery Address</h2>
-      <p><strong>Address:</strong>{{ i.aid.street_address}}</p>
-      <p><strong>City:</strong>{{ i.aid.city }} {{ i.aid.state }}</p>
-      <p><strong>Postal Code:</strong>  {{ i.aid.postal_code }}</p>
+      <h4>Delivery Address</h4>
+      <p><strong>Address : </strong>{{ i.aid.street_address}}</p>
+      <p><strong>City : </strong>{{ i.aid.city }} {{ i.aid.state }}</p>
+      <p><strong>Postal Code : </strong>  {{ i.aid.postal_code }}</p>
 {% endfor %}
       <!-- Embedded Google Map -->
       <div class="map-container">

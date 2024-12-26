@@ -4,13 +4,19 @@
 {% block 'main' %}
 <div class="track-container">
     <div class="tracking-card">
-        {% for i in data %}
+    {% for i in data %}
         {% if errormsg %}
             <div class="alert alert-danger custom-alert" role="alert">
             <i class="bi bi-x-circle"></i> {{ errormsg }}
             </div>
         {% endif %}
-        {% endfor %}
+
+        {% if success %}
+            <div class="alert alert-success custom-alert" role="alert">
+            <i class="bi bi-check-circle"></i> {{ success }}
+            </div>
+        {% endif %}
+    {% endfor %}
         <div class="card-header">
             <h3>Track Your Courier</h3>
         </div>
