@@ -10,6 +10,7 @@ import random
 import os
 import requests
 import logging
+from dotenv import load_dotenv
 
 
 # Home page
@@ -533,8 +534,9 @@ def vieworder(request, oid):
     office_lat = 18.5960313106708  # Latitude for Itvedant Pimpri Branch
     office_lng = 73.78822641307697  # Longitude for Itvedant Pimpri Branch
     
-    google_maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+    load_dotenv()  # This loads the .env file into environment variables
 
+    google_maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
     context = {
         'order': order_detail,
         'customer_lat': customer_lat,
@@ -590,25 +592,22 @@ def verify_otp(request, order_id):
         input_otp = request.POST['otp']
         try:
             otp_entry = OTP.objects.get(oid=order_id)
-            
+
             # Check if the OTP is correct
             if input_otp == otp_entry.otp:
                 # Update the order status to "Delivered"
-                order = otp_entry.oid
+                order = otp_entry.oid  # Fetch the actual order object here
                 order.status = 'Delivered'
                 order.save()
 
                 context['success_message'] = 'Order delivered successfully!'
-                # return redirect(request, '/verify_otp', order_id=order.id)
-                return redirect('verify_otp', order_id=order.id)
             else:
                 context['error_message'] = 'Incorrect OTP. Please try again.'
-                return redirect(request, '/verify_otp', order_id=order_id)
-
+        
         except OTP.DoesNotExist:
-            # messages.error(request, "OTP not found. Please request a new one.")
             return redirect('/trackorder')  # Or any appropriate redirect
     
-    return render(request, 'verify_otp.html', {'order_id': order_id, 'context': context})
+    # Pass the order_id and any messages to the template
+    return render(request, 'verify_otp.html', {'order_id': order_id, **context})
 
 

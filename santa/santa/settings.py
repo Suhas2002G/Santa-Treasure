@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Gmail Integration settings
+load_dotenv()
 EMAIL_HOST='smtp.gmail.com'            
 EMAIL_HOST_USER='santa.treasure2024@gmail.com'
 EMAIL_HOST_PASSWORD=os.getenv('EMAIL_HOST_PASSWORD')       # Enter your SMTP host Password

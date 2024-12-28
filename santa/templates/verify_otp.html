@@ -8,9 +8,9 @@
             <div class="alert alert-success text-center">
                 {{ success_message }}
             </div>
-            <div class="text-center mt-3">
-                <h2>Order Status: <span class="text-success">Delivered</span></h2>
-            </div>
+            <!-- <div class="text-center mt-3">
+                <h4>Order Status: <span class="text-success">Delivered</span></h4>
+            </div> -->
         {% elif error_message %}
             <div class="alert alert-danger text-center">
                 {{ error_message }}
@@ -29,11 +29,11 @@
                 </div>
                 
                 <!-- Error or success message -->
-                {% if error_message %}
+                <!-- {% if error_message %}
                 <div class="otp-error-message">{{ error_message }}</div>
                 {% elif success_message %}
                 <div class="otp-success-message">{{ success_message }}</div>
-                {% endif %}
+                {% endif %} -->
                 
                 <button type="submit" class="otp-btn">Verify OTP</button>
             </form>
