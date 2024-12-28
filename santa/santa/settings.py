@@ -28,11 +28,11 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Gmail Integration settings
-EMAIL_HOST='smtp.gmail.com'             #smtp : send mail transfer protocol
-EMAIL_HOST_USER='suhas8838@gmail.com'
-EMAIL_HOST_PASSWORD='rftf gotx qxwz oawj'
-EMAIL_PORT= 587         # default port of email
-EMAIL_USE_TLS=True          #TLS : Transport Layer Security is used to provide security
+EMAIL_HOST='smtp.gmail.com'            
+EMAIL_HOST_USER='santa.treasure2024@gmail.com'
+EMAIL_HOST_PASSWORD=os.getenv('EMAIL_HOST_PASSWORD')       # Enter your SMTP host Password
+EMAIL_PORT= 587         
+EMAIL_USE_TLS=True          
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
 # Application definition
@@ -122,6 +122,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
+
+# os.environ.get('googlemap_api') = Here enter your Google Cloud Platform API key
+GOOGLE_API_KEY=os.environ.get('googlemap_api')
+
 
 LANGUAGE_CODE = 'en-us'
 

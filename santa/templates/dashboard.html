@@ -41,8 +41,27 @@
         </div>
     </div>
 
+
+
+<!-- search / filter based on location  -->
+    <form action="/search_location">
+        <div class="search-bar">
+          <input type="text" name="srchloc" placeholder="Search for order..." class="search-input" />
+          <button class="search-btn">Search</button>
+        </div>
+      </form>
+
+
+
+
+
     <!-- Orders Table -->
     <h3 class="mt-5">Recent Orders</h3>
+    {% if errmsg %}
+            <div class="alert alert-danger" role="alert">
+                {{errmsg}}
+            </div>
+        {% endif %}
     <table class="table table-bordered table-striped">
         <thead>
             <tr>

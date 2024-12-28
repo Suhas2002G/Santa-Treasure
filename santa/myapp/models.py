@@ -1,5 +1,8 @@
+import os
 from django.db import models
-from django.contrib.auth.models import User     #imported for cart functinality
+from django.contrib.auth.models import User
+import requests     #imported for cart functinality
+
 
 # Create your models here.
 class Gifts(models.Model):
@@ -19,15 +22,12 @@ class Cart(models.Model):
 
 class Order(models.Model):
     uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')    #since user table is part auth_user, we have to import it
-    pid=models.ForeignKey('Gifts',on_delete=models.CASCADE, db_column='pid')       #Product is part of same model file 
+    pid=models.ForeignKey('Gifts', on_delete=models.CASCADE, db_column='pid')       #Product is part of same model file 
     qty=models.IntegerField(default=1)
     totalamt=models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True) 
-    aid=models.ForeignKey('Address',on_delete=models.CASCADE, db_column='aid', null=True)
+    aid=models.ForeignKey('Address', on_delete=models.CASCADE, db_column='aid', null=True)
     status=models.CharField(max_length=50, default='Pending')
-
-
-
 
 class Address(models.Model):
     uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')
@@ -38,6 +38,10 @@ class Address(models.Model):
     phone = models.CharField(max_length=10, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp of creation
     updated_at = models.DateTimeField(auto_now=True)  # Timestamp of last update
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+
+    
 
 class OTP(models.Model):
     oid = models.ForeignKey('Order', on_delete=models.CASCADE, db_column='oid')
@@ -45,8 +49,3 @@ class OTP(models.Model):
     email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
     
-
-# class DeliveryStatus(models.Model):
-#     oid = models.ForeignKey('Order', on_delete=models.CASCADE, related_name='delivery_status', db_column='oid')  
-#     status = models.CharField(max_length=50)  
-#     updated_at = models.DateTimeField(auto_now=True)

@@ -51,19 +51,16 @@
    - Integrate Razorpay for payments by following the official Razorpay documentation: https://razorpay.com/docs/payment-gateway/
 
 9. SMTP Integration for OTP:
-   - Install the `smtplib` package, which is usually included in Python's standard library for sending emails.
-   - If you're using a third-party email service like SendGrid, install its library:
-     
-     pip install sendgrid
-     
    - For sending OTP emails, configure your SMTP settings in your project  
-     
      
 
 10. Google Maps API Integration:
-    - If any other dependencies are required, such as for Google Maps API integration or others, install them with:
-      
-      pip install <library_name>
+   - Install the 'googlemaps'
+	pip install googlemaps
+
+   - Create API key of Google Cloud Platform enable following API key
+	1. Google Maps Geocoding API : Converts an address into latitude and longitude coordinates.
+	2. Google Maps Directions API : Provides directions between two locations, which includes the route, distance, and time taken.
       
 
 11. Migrations:

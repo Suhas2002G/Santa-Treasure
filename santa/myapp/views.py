@@ -1,5 +1,3 @@
-from pyexpat.errors import messages
-from django.http import JsonResponse
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
@@ -10,6 +8,8 @@ import razorpay
 from django.core.mail import send_mail    
 import random 
 import os
+import requests
+import logging
 
 
 # Home page
@@ -90,33 +90,99 @@ def myprofile(request):
     return render(request, 'profile.html', context)
 
 # Add Address/Phone
+# def addaddress(request):
+#     context={}
+#     if request.method == 'GET':
+#         return render(request, 'addaddress.html')
+#     else:       
+#         street_address = request.POST['street_address']
+#         city = request.POST['city']
+#         state = request.POST['state']
+#         postal_code = request.POST['postal_code']
+#         phone = request.POST.get('phone', '')
+
+#         if street_address=='' or city=='' or state=='' or postal_code=='' or phone=='':
+#             context['errormsg']='Please fill all the fields'
+#         else:
+#             if request.user.is_authenticated:
+#                 Address.objects.create(
+#                     uid=request.user,  
+#                     street_address=street_address,
+#                     city=city,
+#                     state=state,
+#                     postal_code=postal_code,
+#                     phone=phone
+#                 )
+#                 return redirect('/myprofile')
+#             else:
+#                 return redirect('login')  
+
+
+
 def addaddress(request):
-    context={}
+    context = {}
     if request.method == 'GET':
         return render(request, 'addaddress.html')
-    else:       # Retrieve form data
+    else:
         street_address = request.POST['street_address']
         city = request.POST['city']
         state = request.POST['state']
         postal_code = request.POST['postal_code']
         phone = request.POST.get('phone', '')
 
-        if street_address=='' or city=='' or state=='' or postal_code=='' or phone=='':
-            context['errormsg']='Please fill all the fields'
-        else:
-            if request.user.is_authenticated:
+        if not all([street_address, city, state, postal_code, phone]):
+            context['errormsg'] = 'Please fill all the fields'
+            return render(request, 'addaddress.html', context)
+
+        if request.user.is_authenticated:
+            full_address = f"{street_address}, {city}, {state}, {postal_code}"
+            # print(f"Full Address: {full_address}")
+            latitude = None
+            longitude = None
+            try:
+                api_key = 'AIzaSyDzDmy1BVJcWc1O6B3FdGU3hLVDOcKVJKg'
+                geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
+                params = {'address': full_address, 'key': api_key}
+                response = requests.get(geocode_url, params=params)
+                geocode_data = response.json()
+
+                # print(f"API Response Status Code: {response.status_code}")
+                # print(f"API Response Data: {geocode_data}")
+
+                if response.status_code == 200 and geocode_data.get('status') == 'OK':
+                    location = geocode_data['results'][0]['geometry']['location']
+                    latitude = location['lat']
+                    longitude = location['lng']
+                    # print(f"Extracted Latitude: {latitude}, Longitude: {longitude}")
+                else:
+                    context['errormsg'] = f"Error fetching location: {geocode_data.get('status')}"
+                    return render(request, 'addaddress.html', context)
+
+            except Exception as e:
+                context['errormsg'] = f"An error occurred: {e}"
+                return render(request, 'addaddress.html', context)
+
+            # Save to database
+            # print("Attempting to save the address in the database...")
+            try:
                 Address.objects.create(
-                    uid=request.user,  
+                    uid=request.user,
                     street_address=street_address,
                     city=city,
                     state=state,
                     postal_code=postal_code,
-                    phone=phone
+                    phone=phone,
+                    latitude=latitude,
+                    longitude=longitude
                 )
-                return redirect('/myprofile')
-            else:
-                # If user is not authenticated, redirect to login page
-                return redirect('login')  # Adjust to your login URL name
+                # print("Address successfully saved in the database.")
+            except Exception as e:
+                print(f"Error while saving address: {e}")
+            
+            return redirect('/myprofile')
+        else:
+            return redirect('login')  # Adjust to your login URL
+
 
 
 
@@ -138,6 +204,32 @@ def sort(request,x):
 
     context['data']=p
     return render(request,'gifts.html',context)
+
+
+# Display product acc to category
+def catfilter(request,cv):      
+    q1=Q(is_active=True)
+    q2=Q(cat=cv)
+    p=Gifts.objects.filter(q1 & q2)     # when we want to use two conditions in filter 
+    d={}
+    d['data']=p
+    return render(request,'gifts.html',d)
+
+
+# it is used to filter based on min max values
+def pricefilter(request):
+    min=request.GET['min']    
+    max=request.GET['max']
+    # print(min)
+    # print(max)
+    
+    q1=Q(price__gte = min)
+    q2=Q(price__lte = max)
+    p=Gifts.objects.filter(q1 & q2)
+    d={}
+    d['data']=p
+    return render(request,'gifts.html',d)
+
 
 
 # Search products
@@ -241,7 +333,7 @@ def place_order(request):
     a = Address.objects.filter(uid=request.user.id).first()  # Fetch the first address for the user
 
     if not a:  # If no address is found
-        messages.error(request, "Please add an address before placing an order.")
+        # messages.error(request, "Please add an address before placing an order.")
         return redirect('/cart')  # Redirect to cart if no address is found
 
     for i in c:
@@ -302,7 +394,7 @@ def makepayment(request):
 def paymentsuccess(request):
     sub="Santa's Treasure Order Status"
     msg="Your order has been successfully placed! Estimated delivery is within 3-4 days. Thank you for shopping with us!"
-    frm='suhas8838@gmail.com'
+    frm='santa.treasure2024@gmail.com'
 
     u=User.objects.filter(id=request.user.id)       #email should go to authenticated user only 
     to=u[0].email
@@ -403,17 +495,58 @@ def trackorder(request):
 
         return render(request, 'trackorderOutput.html', context)
 
+ 
+
+def search_location(request):
+    s = request.GET.get('srchloc', '')  # Use .get() to avoid MultiValueDictKeyError
+    if not s:  # Check if search term is empty
+        context = {'errmsg': 'Please enter a location to search.'}
+        return render(request, 'dashboard.html', context)
+
+    # Filter orders based on the location (city and state)
+    p = Order.objects.filter(aid__city__icontains=s)
+    p1 = Order.objects.filter(aid__state__icontains=s)
+
+    output = p.union(p1)
+
+    # Prepare context to pass to the template
+    context = {}
+    if output.exists():
+        context['data'] = output
+    else:
+        context['errmsg'] = 'Order Not Found'
+
+    return render(request, 'dashboard.html', context)
+
+
+
+def vieworder(request, oid):
+    # Fetch the order detail using the given order ID (oid)
+    order_detail = Order.objects.get(id=oid)
     
+    # Get the customer's address related to the order
+    address = order_detail.aid
+    customer_lat = address.latitude
+    customer_lng = address.longitude
+    
+    # Coordinates for office  (fixed coordinates)
+    office_lat = 18.5960313106708  # Latitude for Itvedant Pimpri Branch
+    office_lng = 73.78822641307697  # Longitude for Itvedant Pimpri Branch
+    
+    google_maps_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
 
-    # return render(request, 'trackorder.html', context)
-
-# View Order Page for Admin
-def vieworder(request,oid):
-    context={}
-    order_detail=Order.objects.filter(id=oid)
-    context['data']=order_detail
-    print(order_detail)
+    context = {
+        'order': order_detail,
+        'customer_lat': customer_lat,
+        'customer_lng': customer_lng,
+        'office_lat': office_lat,
+        'office_lng': office_lng,
+        'google_maps_api_key': google_maps_api_key,
+    }
+    
+    # Render the order details page
     return render(request, 'vieworder.html', context)
+
 
 
 def mark_as_deliver(request, order_id):
@@ -437,8 +570,8 @@ def mark_as_deliver(request, order_id):
     # Send OTP to customer email
     send_mail(
         'Your Order OTP',
-        f'Your OTP for order ID {order.id} is {otp}. Kindly share it at the time of delivery.',
-        'suhas8838@gmail.com',
+        f'Your OTP for order is {otp}. Kindly share it at the time of delivery.',
+        'santa.treasure2024@gmail.com',
         [customer_email],
         fail_silently=False,
     )
@@ -473,7 +606,9 @@ def verify_otp(request, order_id):
                 return redirect(request, '/verify_otp', order_id=order_id)
 
         except OTP.DoesNotExist:
-            messages.error(request, "OTP not found. Please request a new one.")
+            # messages.error(request, "OTP not found. Please request a new one.")
             return redirect('/trackorder')  # Or any appropriate redirect
     
     return render(request, 'verify_otp.html', {'order_id': order_id, 'context': context})
+
+
