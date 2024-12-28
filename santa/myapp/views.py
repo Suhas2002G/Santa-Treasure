@@ -141,7 +141,7 @@ def addaddress(request):
             latitude = None
             longitude = None
             try:
-                api_key = 'AIzaSyDzDmy1BVJcWc1O6B3FdGU3hLVDOcKVJKg'
+                api_key = os.getenv('GOOGLE_MAPS_API_KEY')
                 geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
                 params = {'address': full_address, 'key': api_key}
                 response = requests.get(geocode_url, params=params)
