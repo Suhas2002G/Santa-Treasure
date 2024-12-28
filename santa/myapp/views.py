@@ -118,53 +118,58 @@ def myprofile(request):
 #             else:
 #                 return redirect('login')  
 
-
+##
 
 def addaddress(request):
-    context = {}
-    if request.method == 'GET':
-        return render(request, 'addaddress.html')
-    else:
-        street_address = request.POST['street_address']
-        city = request.POST['city']
-        state = request.POST['state']
-        postal_code = request.POST['postal_code']
-        phone = request.POST.get('phone', '')
+    # Load the Google Maps API key from the .env file
+    api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+    
+    context = {
+        'google_maps_api_key': api_key  # Pass the API key to the frontend
+    }
 
-        if not all([street_address, city, state, postal_code, phone]):
-            context['errormsg'] = 'Please fill all the fields'
+    if request.method == 'POST':
+        # Get the form data (manual input or from suggestion)
+        street_address = request.POST.get('street_address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        postal_code = request.POST.get('postal_code')
+        phone = request.POST.get('phone', '')
+        suggested_address = request.POST.get('suggested_address', '')
+
+        # If the address was entered manually
+        if street_address and city and state and postal_code:
+            full_address = f"{street_address}, {city}, {state}, {postal_code}"
+        # If the address was selected from the suggestions
+        elif suggested_address:
+            full_address = suggested_address
+        else:
+            context['errormsg'] = "Please provide a valid address."
             return render(request, 'addaddress.html', context)
 
-        if request.user.is_authenticated:
-            full_address = f"{street_address}, {city}, {state}, {postal_code}"
-            # print(f"Full Address: {full_address}")
-            latitude = None
-            longitude = None
-            try:
-                api_key = os.getenv('GOOGLE_MAPS_API_KEY')
-                geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
-                params = {'address': full_address, 'key': api_key}
-                response = requests.get(geocode_url, params=params)
-                geocode_data = response.json()
+        latitude = None
+        longitude = None
 
-                # print(f"API Response Status Code: {response.status_code}")
-                # print(f"API Response Data: {geocode_data}")
+        # Fetch the latitude and longitude using Google Geocoding API
+        try:
+            geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={full_address}&key={api_key}"
+            response = requests.get(geocode_url)
+            geocode_data = response.json()
 
-                if response.status_code == 200 and geocode_data.get('status') == 'OK':
-                    location = geocode_data['results'][0]['geometry']['location']
-                    latitude = location['lat']
-                    longitude = location['lng']
-                    # print(f"Extracted Latitude: {latitude}, Longitude: {longitude}")
-                else:
-                    context['errormsg'] = f"Error fetching location: {geocode_data.get('status')}"
-                    return render(request, 'addaddress.html', context)
-
-            except Exception as e:
-                context['errormsg'] = f"An error occurred: {e}"
+            if response.status_code == 200 and geocode_data.get('status') == 'OK':
+                location = geocode_data['results'][0]['geometry']['location']
+                latitude = location['lat']
+                longitude = location['lng']
+            else:
+                context['errormsg'] = f"Error fetching location: {geocode_data.get('status')}"
                 return render(request, 'addaddress.html', context)
 
-            # Save to database
-            # print("Attempting to save the address in the database...")
+        except Exception as e:
+            context['errormsg'] = f"An error occurred: {e}"
+            return render(request, 'addaddress.html', context)
+
+        # Save to database
+        if request.user.is_authenticated:
             try:
                 Address.objects.create(
                     uid=request.user,
@@ -176,15 +181,15 @@ def addaddress(request):
                     latitude=latitude,
                     longitude=longitude
                 )
-                # print("Address successfully saved in the database.")
             except Exception as e:
-                print(f"Error while saving address: {e}")
-            
+                context['errormsg'] = f"Error while saving address: {e}"
+                return render(request, 'addaddress.html', context)
+
             return redirect('/myprofile')
         else:
-            return redirect('login')  # Adjust to your login URL
+            return redirect('/login')  # Redirect to login if not authenticated
 
-
+    return render(request, 'addaddress.html', context)
 
 
 # Gifts/Product Page

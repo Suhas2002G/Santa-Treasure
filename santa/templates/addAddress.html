@@ -4,34 +4,88 @@
 
 <div class="address-form-container">
     <h2>Enter Your Address</h2>
+    
     {% if errormsg %}
     <div class="alert alert-danger custom-alert" role="alert">
-      <i class="bi bi-x-circle"></i> {{ errormsg }}
+        <i class="bi bi-x-circle"></i> {{ errormsg }}
     </div>
     {% endif %}
+    
     <form method="post" action="">
         {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="suggested_address">Suggested Address:</label>
+            <input type="text" id="suggested_address" name="suggested_address" class="form-control" 
+                   placeholder="Start typing your address" oninput="getAddressSuggestions()">
+            <ul id="suggestions-list" class="suggestions-list"></ul>
+        </div>
+        
         <div class="form-group">
             <label for="street_address">Street Address:</label>
-            <textarea id="street_address" name="street_address" rows="3" class="form-control" required></textarea>
+            <textarea id="street_address" name="street_address" rows="3" class="form-control"></textarea>
         </div>
         <div class="form-group">
             <label for="city">City:</label>
-            <input type="text" id="city" name="city" maxlength="50" class="form-control" required>
+            <input type="text" id="city" name="city" maxlength="50" class="form-control">
         </div>
         <div class="form-group">
             <label for="state">State:</label>
-            <input type="text" id="state" name="state" maxlength="50" class="form-control" required>
+            <input type="text" id="state" name="state" maxlength="50" class="form-control">
         </div>
         <div class="form-group">
             <label for="postal_code">Postal Code:</label>
-            <input type="text" id="postal_code" name="postal_code" maxlength="10" class="form-control" required>
+            <input type="text" id="postal_code" name="postal_code" maxlength="10" class="form-control">
         </div>
         <div class="form-group">
             <label for="phone">Phone Number:</label>
             <input type="text" id="phone" name="phone" maxlength="10" class="form-control">
         </div>
+        
         <button type="submit" class="btn btn-submit">Submit</button>
     </form>
 </div>
+
+<script>
+  // Get the Google Maps API Key passed from Django context
+  const apiKey = "{{ google_maps_api_key }}";
+
+  function getAddressSuggestions() {
+    const input = document.getElementById('suggested_address');
+    const query = input.value;
+
+    if (query.length < 3) {
+        document.getElementById('suggestions-list').innerHTML = '';
+        return;
+    }
+
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${apiKey}`;
+
+    fetch(geocodeUrl)
+        .then(response => response.json())
+        .then(data => {
+            const suggestionsList = document.getElementById('suggestions-list');
+            suggestionsList.innerHTML = '';
+
+            if (data.status === 'OK') {
+                data.results.forEach(result => {
+                    const suggestionItem = document.createElement('li');
+                    suggestionItem.textContent = result.formatted_address;
+                    suggestionItem.onclick = () => {
+                        input.value = result.formatted_address;
+                        document.getElementById('suggestions-list').innerHTML = '';
+
+                        // Pre-fill the manual address fields with suggestion
+                        document.getElementById('street_address').value = result.address_components[0].long_name || '';
+                        document.getElementById('city').value = result.address_components[1].long_name || '';
+                        document.getElementById('state').value = result.address_components[2].long_name || '';
+                        document.getElementById('postal_code').value = result.address_components[3].long_name || '';
+                    };
+                    suggestionsList.appendChild(suggestionItem);
+                });
+            }
+        });
+  }
+</script>
+
 {% endblock 'main' %}
