@@ -27,6 +27,9 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
 ### Admin Features:
 - **Admin Login & Authentication:** 
   - Admins can log in to manage deliveries.
+
+- **Dashboard:**
+  - Admins can get an overview of the deliveries, including the total number of gifts delivered and pending deliveries.
   
 - **Order Management:**
   - Admins can view, update, and manage the delivery status of orders.
@@ -41,8 +44,7 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
   - An OTP (One-Time Password) is sent to the customer's email when the delivery is scheduled.
   - The order will only be marked as "Delivered" when the correct OTP is entered by the user.
   
-- **Dashboard:**
-  - Admins can get an overview of the deliveries, including the total number of gifts delivered and pending deliveries.
+
 
 ---
 
@@ -54,17 +56,18 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
   - Google Maps API (for route visualization)
 
 - **Backend:**
-  - Python (Flask/Django)
-  - Route Optimization (Google Map Place API)
+  - Python
+  - Django
+  - Route Optimization (Google Map API)
   - Razorpay API (for payment integration)
   - OTP Verification (using email services of SMTP)
 
 - **Database:**
-  - MySQL (for storing user data, orders, addresses, gifts, delivery_status, etc)
+  - MySQL (for storing user data, orders, addresses, gifts, etc)
 
 - **APIs:**
-  - **Google Maps API:** For routing and location-based services.
-  - **Google Places API:** For searching customer addresses.
+  - **Google Maps Geocoding API:** For Converting an address into latitude and longitude coordinates.
+  - **Google Maps Directions API:** Provides directions between two locations, which includes the route, distance, and time taken.
   - **Razorpay API:** For secure payment transactions.
   - **Email Service (SMTP):** For sending OTP to customers.
 
