@@ -36,6 +36,7 @@ urlpatterns = [
     path('verify_otp/<int:order_id>/', views.verify_otp, name='verify_otp'),
     
     
+    
 
 
 

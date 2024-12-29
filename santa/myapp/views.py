@@ -11,6 +11,8 @@ import os
 import requests
 import logging
 from dotenv import load_dotenv
+from django.db.models import Count
+from datetime import datetime
 
 
 # Home page
@@ -616,3 +618,26 @@ def verify_otp(request, order_id):
     return render(request, 'verify_otp.html', {'order_id': order_id, **context})
 
 
+def adminreport(request):
+    # Query for counting orders by status
+    status_data = Order.objects.values('status').annotate(count=Count('status')).order_by('status')
+    
+    # Extract data for the pie chart
+    labels = ['Pending', 'Delivered', 'Cancelled']
+    data = {status: 0 for status in labels}
+    
+    # Populate the data dictionary based on the query result
+    for item in status_data:
+        if item['status'] in data:
+            data[item['status']] = item['count']
+    
+    # Prepare data for the pie chart
+    chart_labels = list(data.keys())
+    chart_data = list(data.values())
+
+    context = {
+        'chart_labels': chart_labels,  # Labels for pie chart (statuses)
+        'chart_data': chart_data,      # Data for pie chart (counts)
+    }
+
+    return render(request, 'adminreport.html', context)

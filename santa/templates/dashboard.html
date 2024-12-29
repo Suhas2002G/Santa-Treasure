@@ -92,34 +92,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <!-- <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Customer Name</th>
-                <th>Location</th>
-                <th>Order Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for j in address %}
-            {% if forloop.counter == 1 %}
-            {% for i in data %}
-            <tr>
-                <td>{{i.id}}</td>
-                <td>2024-12-18</td>
-                <td>{{i.uid.first_name}}</td>
-                <td>{{j.street_address}} {{j.city}} {{j.postal_code}}</td>
-                <td>Pending</td>
-                <td><a href="/vieworder" class="btn btn-primary">View</a></td>
-            </tr>
-            {% endfor %}
-            {% endif %}
-            {% endfor %}
-        </tbody>
-    </table> -->
 </div>
 
 {% endblock 'main' %}
