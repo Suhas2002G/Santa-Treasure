@@ -1,25 +1,27 @@
 {% extends 'adminbase.html' %}
 {% load static %}
+
 {% block 'main' %}
 <!-- OTP Verification Page -->
 <div class="otp-container">
     <div class="otp-card">
         {% if success_message %}
-            <div class="alert alert-success text-center">
+            <!-- Success alert -->
+            <div class="alert alert-success text-center" id="success-message">
                 {{ success_message }}
             </div>
-            <!-- <div class="text-center mt-3">
-                <h4>Order Status: <span class="text-success">Delivered</span></h4>
-            </div> -->
         {% elif error_message %}
+            <!-- Error alert -->
             <div class="alert alert-danger text-center">
                 {{ error_message }}
             </div>
         {% endif %}
+        
         <div class="otp-card-header">
             <h3>Verify OTP</h3>
             <p class="otp-description">Please enter the OTP sent to your email to proceed.</p>
         </div>
+        
         <div class="otp-card-body">
             <form method="POST">
                 {% csrf_token %}
@@ -28,16 +30,23 @@
                     <input type="text" id="otp" class="otp-input-field" name="otp" placeholder="Enter 4-digit OTP" required maxlength="4" autocomplete="off">
                 </div>
                 
-                <!-- Error or success message -->
-                <!-- {% if error_message %}
-                <div class="otp-error-message">{{ error_message }}</div>
-                {% elif success_message %}
-                <div class="otp-success-message">{{ success_message }}</div>
-                {% endif %} -->
-                
                 <button type="submit" class="otp-btn">Verify OTP</button>
             </form>
         </div>
     </div>
 </div>
+
+<!-- JavaScript to handle success message and redirect -->
+<script>
+    // Show the success alert and redirect after 5 seconds
+    {% if success_message %}
+        setTimeout(function() {
+            // Hide the success message after 3 seconds
+            document.getElementById('success-message').style.display = 'none';
+            // Redirect to dashboard after 3 seconds
+            window.location.href = "/dashboard";  // Replace with the correct dashboard URL
+        }, 5000);
+    {% endif %}
+</script>
+
 {% endblock 'main' %}

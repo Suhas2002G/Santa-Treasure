@@ -12,13 +12,9 @@
      
 
 3. Activate the Virtual Environment:
-   - On Windows:
+   - On Windows: env\Scripts\activate
      
-     env\Scripts\activate
-     
-   - On macOS/Linux:
-     
-     source env/bin/activate
+   - On macOS/Linux: source env/bin/activate
      
 
 4. Install Django:
@@ -43,19 +39,24 @@
    - Install Razorpay library for payment gateway integration:
      
      pip install razorpay
+
+8. Install ReparLab:
+   - Install ReportLab library, which is used for generating PDFs
+     
+     pip install reportlab
+
      
 
-8. Razorpay Integration:
+9. Razorpay Integration:
    - You’ll need your Razorpay API Key and API Secret from the Razorpay Dashboard (https://razorpay.com/dashboard).
    - Add these keys to your project configuration file (e.g., `settings.py` or `.env`).
    - Integrate Razorpay for payments by following the official Razorpay documentation: https://razorpay.com/docs/payment-gateway/
 
-9. SMTP Integration for OTP:
+10. SMTP Integration for OTP:
    - For sending OTP emails, configure your SMTP settings in your project  
      
 
-10. Google Maps API Integration:
-   - Install the 'googlemaps'
+11. Google Maps API Integration:
 	pip install googlemaps
 
    - Create API key of Google Cloud Platform enable following API key
@@ -63,14 +64,15 @@
 	2. Google Maps Directions API : Provides directions between two locations, which includes the route, distance, and time taken.
       
 
-11. Migrations:
+12. Migrations:
     - After setting up the virtual environment and installing dependencies, run the following to set up the database schema and make migrations:
       
       python manage.py makemigrations
       python manage.py migrate
       
 
-12. Running the Project:
+13. Running the Project:
     - After completing the setup, run the Django server:
       python manage.py runserver
+
     - Visit `http://localhost:8000` to see the project in action.

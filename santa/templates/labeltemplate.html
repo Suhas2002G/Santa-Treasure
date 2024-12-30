@@ -1,0 +1,31 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block 'main' %}
+<div class="label-container">
+    <div class="label-header">
+        <h2>Shipping Label</h2>
+        <p class="label-shipper-name">{{ shipper_name }}</p>
+    </div>
+    <div class="label-details">
+        <p class="label-order-id"><strong>Order ID:</strong> {{ order_id }}</p>
+        <p class="label-tracking-id"><strong>Tracking ID:</strong> {{ tracking_id }}</p>
+        <p class="label-customer-name"><strong>Customer Name:</strong> {{ user_name }}</p>
+        <p class="label-product-id"><strong>Product Name:</strong> {{ product_name }}</p>
+        <p class="label-quantity"><strong>Quantity:</strong> {{ product_qty }}</p>
+        <p class="label-total-amount"><strong>Total Amount:</strong> ₹{{ total_amount }}</p>
+        <!-- <p class="label-status"><strong>Status:</strong> {{ status }}</p> -->
+    </div>
+    <div class="label-address">
+        <p><strong>Shipping Address:</strong></p>
+        <p class="label-street-address">{{ address.street_address }}</p>
+        <p class="label-city-state">{{ address.city }}, {{ address.state }} - {{ address.postal_code }}</p>
+        <p class="label-phone"><strong>Phone:</strong> {{ address.phone }}</p>
+    <!-- Updated Print button to download PDF -->
+    <a href="?download_pdf=true" class="label-print-button">Download Label PDF
+    </a>
+    
+</div>
+</div>
+
+{% endblock 'main' %}

@@ -979,51 +979,188 @@
 /* ADMIN PANEL STYLING  */
 
 
-/* dashboard starts here  */
-.dash-container{
-  max-width: 1200px;
-  margin: 20px auto;
+/* General Dashboard Styling */
+.dash-container {
+  max-width: 1350px;
+  margin: 90px auto 20px auto;
   padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+.dash-container h1{
+  font-family: 'Times New Roman', Times, serif;
+  color: #393939;
+  margin-bottom: 30px;
+  margin-top: -10px;
+}
+/* Cards Section */
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
 .total-orders-card {
-  background-color: #2196F3;
+  background-color: #1976d2;
   color: white;
   text-align: center;
 }
 
 .pending-orders-card {
-  background-color: #FF9800;
+  background-color: #f51d1d;
+  color: white;
+  text-align: center;
+}
+.in-transit-orders-card {
+  background-color: #b5b207;
   color: white;
   text-align: center;
 }
 
 .delivered-orders-card {
-  /* background-color: #2196F3; */
-  background-color: #4CAF50;
+  background-color: #43a047;
   color: white;
   text-align: center;
 }
 
 .dash-card-title {
   font-weight: bold;
-}
-.dash-card-text{
-  font-size: larger;
-}
-.table th, .table td {
-  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
 }
 
-.btn-primary {
+.dash-card-text {
+  font-size: 1.5rem;
+}
+
+.dash-filter-form{
+  padding: 10px;
+  border-radius: 30px;
+
+}
+
+/* Search and Filter Form */
+form.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+form.d-flex .form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+form.d-flex .form-control {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+form.d-flex .btn-primary {
   background-color: #007bff;
   border-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+}
+
+form.d-flex .btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Table Styling */
+.table {
+  margin-top: 30px;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.table th {
+  background-color: #3a3939;
+  /* background-color: #007bff; */
+  color: white;
+  font-weight: bold;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: #1976d2;
+  border-color: #1976d2;
+  font-size: 0.9rem;
+  padding: 5px 15px;
+  border-radius: 5px;
 }
 
 .btn-primary:hover {
   background-color: #0056b3;
   border-color: #0056b3;
 }
-/* dashboard ends here  */
+
+/* Alerts */
+.alert {
+  font-size: 0.9rem;
+  margin-top: 20px;
+  border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dash-container {
+    padding: 10px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+  }
+
+  form.d-flex {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  form.d-flex .form-group {
+    width: 100%;
+  }
+
+  form.d-flex .btn-primary {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+}
+/* dashboard end here  */
 
 
 
@@ -1326,3 +1463,96 @@
 /* otp page ends here  */
 
 
+.label-container {
+  width: 400px;
+  padding: 20px;
+  border: 2px solid black;
+  margin: 100px auto 20px auto;
+  font-family: Arial, sans-serif;
+  background-color: rgb(255, 247, 247);
+}
+
+.label-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.label-shipper-name {
+  font-style: italic;
+  color: #555;
+}
+
+/* .label-details p {
+  margin: 5px 0;
+}
+
+.label-address {
+  margin-top: 15px;
+}
+
+.label-street-address,
+.label-city-state,
+.label-phone {
+  margin-left: 10px;
+} */
+
+.label-print-button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+}
+
+.label-print-button:hover {
+  background-color: #5171f1;
+  color: black;
+}
+
+
+/* Wrapper for all report sections to keep charts aligned and spaced properly */
+.report-container {
+  margin: 30px auto;
+  width: 80%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.chart-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Styling for the chart canvas */
+.chart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.chart-canvas {
+  width: 900px !important;
+  height: 500px !important;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Enhancing the layout responsiveness */
+@media (max-width: 768px) {
+  .chart-wrapper {
+      flex-direction: column;
+  }
+
+  .chart-canvas {
+      width: 80% !important;
+      height: 400px !important;
+  }
+}

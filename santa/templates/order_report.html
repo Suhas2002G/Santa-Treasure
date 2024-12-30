@@ -1,0 +1,119 @@
+{% extends 'adminbase.html' %}
+{% load static %}
+
+{% block 'main' %}
+<div class="report-container">
+    <h2 class="chart-title">Order Status Overview</h2>
+    <!-- Apply explicit width and height via style and use flexbox for alignment -->
+    <div class="chart-wrapper">
+        <canvas id="orderStatusChart" class="chart-canvas"></canvas>
+    </div>
+</div>
+
+<div class="report-container">
+    <h2 class="chart-title">Order Count by City</h2>
+    <!-- Apply explicit width and height via style and use flexbox for alignment -->
+    <div class="chart-wrapper">
+        <canvas id="orderCityChart" class="chart-canvas"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Dynamically passed data from the Django view
+    const orderStatusData = {
+        labels: ['Pending', 'In-Transit', 'Delivered', ],
+        datasets: [{
+            data: [
+                {{ order_status_data.pending }},
+                {{ order_status_data.in_transit }},
+                {{ order_status_data.delivered }}
+            ], // Data from context
+            backgroundColor: ['#FF5733', '#FFC300', '#28A745', '#DC3545'],
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    };
+
+    const orderStatusConfig = {
+        type: 'pie',
+        data: orderStatusData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true
+                }
+            }
+        }
+    };
+
+    // Initialize the Pie Chart for Order Status
+    const ctx1 = document.getElementById('orderStatusChart').getContext('2d');
+    new Chart(ctx1, orderStatusConfig);
+
+    // Data for Order Count by City
+    const cityData = {
+        labels: {{ cities|safe }}, // City names passed from Django context
+        datasets: [{
+            label: 'Order Count',
+            data: {{ order_counts|safe }}, // Order count for each city
+            backgroundColor: '#3498DB',
+            borderColor: '#fff',
+            borderWidth: 1
+        }]
+    };
+
+    const cityConfig = {
+        type: 'bar',
+        data: cityData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Initialize the Bar Chart for Order Count by City
+    const ctx2 = document.getElementById('orderCityChart').getContext('2d');
+    new Chart(ctx2, cityConfig);
+</script>
+
+{% endblock 'main' %}

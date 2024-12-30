@@ -27,13 +27,19 @@
             <p><strong>Delivery Status : </strong> <span class="status-in-progress">{{i.status}}</span></p>
             <p><strong>Location : </strong> <span class="detail-value">{{i.aid.street_address}} {{i.aid.city}} {{i.aid.postal_code}}</span></p>
             <!-- {% endfor %} -->
+            {% if i.status != 'Delivered' %}
+                <a href="/mark_as_deliver/{{ i.id }}" class="mt-2">
+                    <button class="action-btn contact-btn">Mark as Deliver</button>
+                </a>
+            {% endif %}
         </div>
 
-        <div class="action-buttons">
-            <a href=""> <button class="action-btn cancel-btn">Cancel Delivery</button></a>
-            <a href="/mark_as_deliver/{{i.id}}"> <button class="action-btn contact-btn">Mark as Deliver</button></a>
-        </div>
+        
     </div>
+    <!-- <div class="action-buttons">
+        <a href=""> <button class="action-btn cancel-btn">Cancel Delivery</button></a>
+        <a href="/mark_as_deliver/{{i.id}}"> <button class="action-btn contact-btn">Mark as Deliver</button></a>
+    </div> -->
     {% endfor %}
 </div>
 {% endblock 'main' %}

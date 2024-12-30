@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect
+from django.shortcuts import get_object_or_404, render,HttpResponse,redirect
 from django.contrib.auth.models import User        
 from django.contrib.auth import authenticate       
 from django.contrib.auth import login,logout
@@ -13,6 +13,10 @@ import logging
 from dotenv import load_dotenv
 from django.db.models import Count
 from datetime import datetime
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 
 
 # Home page
@@ -72,13 +76,8 @@ def user_logout(request):
     logout(request)
     return redirect('/')
 
-# User Profile Page
-# def myprofile(request):
-#     context={}
-#     a=User.objects.filter(id=request.user.id)    
 
-#     context['data']=a
-#     return render(request,'profile.html',context)
+# My Profile Page for User
 def myprofile(request):
     user = request.user  # Get the currently logged-in user
     try:
@@ -92,36 +91,9 @@ def myprofile(request):
     }
     return render(request, 'profile.html', context)
 
-# Add Address/Phone
-# def addaddress(request):
-#     context={}
-#     if request.method == 'GET':
-#         return render(request, 'addaddress.html')
-#     else:       
-#         street_address = request.POST['street_address']
-#         city = request.POST['city']
-#         state = request.POST['state']
-#         postal_code = request.POST['postal_code']
-#         phone = request.POST.get('phone', '')
 
-#         if street_address=='' or city=='' or state=='' or postal_code=='' or phone=='':
-#             context['errormsg']='Please fill all the fields'
-#         else:
-#             if request.user.is_authenticated:
-#                 Address.objects.create(
-#                     uid=request.user,  
-#                     street_address=street_address,
-#                     city=city,
-#                     state=state,
-#                     postal_code=postal_code,
-#                     phone=phone
-#                 )
-#                 return redirect('/myprofile')
-#             else:
-#                 return redirect('login')  
 
-##
-
+# Add address page
 def addaddress(request):
     # Load the Google Maps API key from the .env file
     api_key = os.getenv('GOOGLE_MAPS_API_KEY')
@@ -451,35 +423,75 @@ def dashboard(request):
     total_orders = Order.objects.count()
     pending_orders = Order.objects.filter(status='Pending').count()
     delivered_orders = Order.objects.filter(status='Delivered').count()
+    in_transit_orders = Order.objects.filter(status='In-Transit').count()
     
-    # Fetch orders with related user and address data
-    orders = Order.objects.select_related('uid').prefetch_related(
-        'uid__address_set'
-    ).order_by('-created_at')
+    # Initialize the query to fetch all orders
+    orders = Order.objects.select_related('uid').prefetch_related('uid__address_set').order_by('-created_at')
+
+    # Apply filters based on the request parameters
+    order_id = request.GET.get('order_id')
+    city = request.GET.get('city')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    # Apply filters if parameters are provided
+    if order_id:
+        orders = orders.filter(id=order_id)
+    
+    if city:
+        orders = orders.filter(uid__address__city__icontains=city)
+    
+    if start_date:
+        # Ensure the start date is converted to a datetime object
+        start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+        orders = orders.filter(created_at__gte=start_date_obj)
+
+    if end_date:
+        # Ensure the end date is converted to a datetime object
+        end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+        # Set the time to the last moment of the end date (23:59:59.999999)
+        end_date_obj = end_date_obj.replace(hour=23, minute=59, second=59, microsecond=999999)
+        orders = orders.filter(created_at__lte=end_date_obj)
 
     context = {
         'data': orders,
         'total_orders': total_orders,
         'pending_orders': pending_orders,
         'delivered_orders': delivered_orders,
+        'in_transit_orders':in_transit_orders,
     }
     return render(request, 'dashboard.html', context)
+
 
 
 # Filter based on delivery status
 def filter_status(request,sid):
     context={}
+    total_orders = Order.objects.count()
+    pending_orders = Order.objects.filter(status='Pending').count()
+    delivered_orders = Order.objects.filter(status='Delivered').count()
+    in_transit_orders = Order.objects.filter(status='In-Transit').count()
+    context = {
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'delivered_orders': delivered_orders,
+        'in_transit_orders':in_transit_orders,
+    }
     if sid == '1':
-        o=Order.objects.all()
+        o=Order.objects.all().order_by('-created_at')
         context['data']=o
         return render(request, 'dashboard.html', context)
     elif sid == '2' :
-        o=Order.objects.filter(status='Pending')
+        o=Order.objects.filter(status='Pending').order_by('-created_at')
         context['data']=o
         print(o)
         return render(request, 'dashboard.html', context)
     elif sid == '3':
-        o=Order.objects.filter(status='Delivered')
+        o=Order.objects.filter(status='Delivered').order_by('-created_at')
+        context['data']=o
+        return render(request, 'dashboard.html', context)
+    elif sid == '4':
+        o=Order.objects.filter(status='In-Transit').order_by('-created_at')
         context['data']=o
         return render(request, 'dashboard.html', context)
 
@@ -566,9 +578,6 @@ def mark_as_deliver(request, order_id):
     # Generate a random 4-digit OTP
     otp = str(random.randint(1000, 9999))
 
-    # Set OTP expiration time (optional)
-    # expires_at = timezone.now() + timedelta(minutes=10)
-
     # Save OTP to the database
     OTP.objects.create(
         oid=order,
@@ -584,11 +593,6 @@ def mark_as_deliver(request, order_id):
         [customer_email],
         fail_silently=False,
     )
-    
-    # Update the order status to "In Progress" when OTP is generated
-    # order.status = 'In Progress'
-    # order.save()
-    
     return redirect('verify_otp', order_id=order.id)
 
 
@@ -598,7 +602,9 @@ def verify_otp(request, order_id):
     if request.method == 'POST':
         input_otp = request.POST['otp']
         try:
-            otp_entry = OTP.objects.get(oid=order_id)
+            # otp_entry = OTP.objects.get(oid=order_id)
+            otp_entry = OTP.objects.filter(oid=order_id).order_by('-created_at').first()
+
 
             # Check if the OTP is correct
             if input_otp == otp_entry.otp:
@@ -608,6 +614,7 @@ def verify_otp(request, order_id):
                 order.save()
 
                 context['success_message'] = 'Order delivered successfully!'
+                context['redirect'] = True  # Flag to trigger JavaScript redirect
             else:
                 context['error_message'] = 'Incorrect OTP. Please try again.'
         
@@ -618,26 +625,98 @@ def verify_otp(request, order_id):
     return render(request, 'verify_otp.html', {'order_id': order_id, **context})
 
 
-def adminreport(request):
-    # Query for counting orders by status
-    status_data = Order.objects.values('status').annotate(count=Count('status')).order_by('status')
-    
-    # Extract data for the pie chart
-    labels = ['Pending', 'Delivered', 'Cancelled']
-    data = {status: 0 for status in labels}
-    
-    # Populate the data dictionary based on the query result
-    for item in status_data:
-        if item['status'] in data:
-            data[item['status']] = item['count']
-    
-    # Prepare data for the pie chart
-    chart_labels = list(data.keys())
-    chart_data = list(data.values())
 
+
+# Generate Shipping Label
+def generatelabel(request, order_id):
+    # Fetch the order details
+    order = get_object_or_404(Order, id=order_id)
+    # Fetch the associated address
+    address = order.aid
+
+    # If 'download_pdf' is in the query parameters, update the order status and generate PDF
+    if request.GET.get('download_pdf'):
+        if order.status != 'Delivered':
+            order.status = 'In-Transit'  # Change the order status to 'In-Transit'
+            order.save()  # Save the updated order status
+
+        # Create the PDF response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="shipping_label_{order.id}.pdf"'
+
+        # Create PDF using ReportLab
+        pdf_canvas = canvas.Canvas(response, pagesize=letter)
+        pdf_canvas.setFont("Helvetica", 12)
+
+        # Add header
+        pdf_canvas.setFont("Helvetica-Bold", 16)
+        pdf_canvas.drawString(200, 750, "Shipping Label")
+        pdf_canvas.setFont("Helvetica", 12)
+        
+        # Order Details (aligned left)
+        pdf_canvas.drawString(100, 710, f"Order ID: {order.id}")
+        pdf_canvas.drawString(100, 690, f"Tracking ID: {f'OD-{order.id}-{order.created_at.strftime('%Y%m%d')}'}")
+        pdf_canvas.drawString(100, 670, f"Customer Name: {order.uid.first_name}")
+        pdf_canvas.drawString(100, 650, f"Product Name: {order.pid.name}")
+        pdf_canvas.drawString(100, 630, f"Quantity: {order.qty}")
+        pdf_canvas.drawString(100, 610, f"Total Amount: Rs. {order.totalamt}")
+
+        # Shipping Address (aligned left)
+        pdf_canvas.drawString(100, 590, "Shipping Address:")
+        pdf_canvas.drawString(100, 570, f"Street: {address.street_address}")
+        pdf_canvas.drawString(100, 550, f"City: {address.city}, State: {address.state} - {address.postal_code}")
+        pdf_canvas.drawString(100, 530, f"Phone: {address.phone}")
+
+        # Footer (aligned center)
+        pdf_canvas.setFont("Helvetica-Oblique", 10)
+        pdf_canvas.drawString(200, 50, "Thank you for choosing Santa's Treasure Pvt Ltd.")
+
+        # Save the PDF
+        pdf_canvas.showPage()
+        pdf_canvas.save()
+
+        return response
+
+    # Otherwise, render the label template for display
     context = {
-        'chart_labels': chart_labels,  # Labels for pie chart (statuses)
-        'chart_data': chart_data,      # Data for pie chart (counts)
+        'order_id': order.id,
+        'user_name': order.uid.first_name,
+        'product_name': order.pid.name,
+        'product_qty': order.qty,
+        'total_amount': order.totalamt,
+        'address': address,
+        'shipper_name': "SANTA'S TREASURE PVT LTD",
+        'tracking_id': f"OD-{order.id}-{order.created_at.strftime('%Y%m%d')}",
     }
 
-    return render(request, 'adminreport.html', context)
+    return render(request, 'labeltemplate.html', context)
+
+
+
+
+# Report Page [Pie chart & Bar Code]
+def order_report(request):
+    # Count orders by status
+    pending = Order.objects.filter(status='Pending').count()
+    in_transit = Order.objects.filter(status='In-Transit').count()
+    delivered = Order.objects.filter(status='Delivered').count()
+
+    # Count orders by city 
+    city_order_counts = Order.objects.values('aid__city').annotate(order_count=Count('aid')).order_by('aid__city')
+
+    # Prepare the data to be passed to the template
+    order_status_data = {
+        'pending': pending,
+        'in_transit': in_transit,
+        'delivered': delivered,
+    }
+
+    # Extract city names and order counts from the query
+    cities = [item['aid__city'] for item in city_order_counts]
+    order_counts = [item['order_count'] for item in city_order_counts]
+
+    return render(request, 'order_report.html', {
+        'order_status_data': order_status_data,
+        'cities': cities,
+        'order_counts': order_counts
+    })

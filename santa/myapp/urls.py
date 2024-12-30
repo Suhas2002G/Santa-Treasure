@@ -34,6 +34,8 @@ urlpatterns = [
     path('vieworder/<oid>', views.vieworder),
     path('mark_as_deliver/<int:order_id>/', views.mark_as_deliver, name='mark_as_deliver'),
     path('verify_otp/<int:order_id>/', views.verify_otp, name='verify_otp'),
+    path('generatelabel/<int:order_id>', views.generatelabel),
+    path('order_report', views.order_report)
     
     
     

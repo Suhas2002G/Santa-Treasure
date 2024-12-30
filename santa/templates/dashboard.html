@@ -5,63 +5,82 @@
 
 <!-- Container for Admin Dashboard -->
 <div class="dash-container">
-    <h1 class="text-center mb-4" style="margin-top: 50px;">Welcome to the Admin Dashboard</h1>
+    <h1 class="text-center">Welcome to the Admin Dashboard</h1>
     
     <!-- Dashboard Cards -->
     <div class="row">
-        <div class="col-md-4">
-        <a href="/filter_status/1" style="text-decoration: none;">
-            <div class="card total-orders-card">
-                <div class="card-body">
-                    <h5 class="dash-card-title">Total Orders</h5>
-                    <p class="dash-card-text">{{total_orders}}</p>
+        <div class="col-md-3">
+            <a href="/dashboard" style="text-decoration: none;">
+                <div class="card total-orders-card">
+                    <div class="card-body">
+                        <h5 class="dash-card-title">Total Orders</h5>
+                        <p class="dash-card-text">{{ total_orders }}</p>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <a href="/filter_status/2" style="text-decoration: none;">
-            <div class="card pending-orders-card">
-                <div class="card-body">
-                    <h5 class="dash-card-title">Pending Orders</h5>
-                    <p class="dash-card-text">{{pending_orders}}</p>
+                <div class="card pending-orders-card">
+                    <div class="card-body">
+                        <h5 class="dash-card-title">Pending Orders</h5>
+                        <p class="dash-card-text">{{ pending_orders }}</p>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
         </div>
-        <div class="col-md-4">
-            <a href="/filter_status/3" style="text-decoration: none;">
-            <div class="card delivered-orders-card">
-                <div class="card-body">
-                    <h5 class="dash-card-title">Delivered Orders</h5>
-                    <p class="dash-card-text">{{delivered_orders}}</p>
+        <div class="col-md-3">
+            <a href="/filter_status/4" style="text-decoration: none;">
+                <div class="card in-transit-orders-card">
+                    <div class="card-body">
+                        <h5 class="dash-card-title">In-Transit</h5>
+                        <p class="dash-card-text">{{ in_transit_orders }}</p>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
+        <div class="col-md-3">
+            <a href="/filter_status/3" style="text-decoration: none;">
+                <div class="card delivered-orders-card">
+                    <div class="card-body">
+                        <h5 class="dash-card-title">Delivered Orders</h5>
+                        <p class="dash-card-text">{{ delivered_orders }}</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 
-
-
-<!-- search / filter based on location  -->
-    <form action="/search_location">
-        <div class="search-bar">
-          <input type="text" name="srchloc" placeholder="Search for order..." class="search-input" />
-          <button class="search-btn">Search</button>
+    <!-- Combined Search and Filter Form -->
+    <form action="/dashboard" method="GET" class="d-flex align-items-center mt-5 dash-filter-form">
+        <div class="form-group me-3">
+            <label for="search-order-id" class="form-label">Order ID</label>
+            <input type="text" id="search-order-id" name="order_id" placeholder="Filter by Order ID" class="form-control">
         </div>
-      </form>
-
-
-
-
+        <div class="form-group me-3">
+            <label for="search-city" class="form-label">City</label>
+            <input type="text" id="search-city" name="city" placeholder="Filter by City" class="form-control">
+        </div>
+        <div class="form-group me-3">
+            <label for="start-date" class="form-label">Start Date</label>
+            <input type="date" id="start-date" name="start_date" class="form-control">
+        </div>
+        <div class="form-group me-3">
+            <label for="end-date" class="form-label">End Date</label>
+            <input type="date" id="end-date" name="end_date" class="form-control">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </div>
+    </form>
 
     <!-- Orders Table -->
-    <h3 class="mt-5">Recent Orders</h3>
+    <h4 class="mt-1">Recent Orders</h4>
     {% if errmsg %}
-            <div class="alert alert-danger" role="alert">
-                {{errmsg}}
-            </div>
-        {% endif %}
+        <div class="alert alert-danger" role="alert">
+            {{ errmsg }}
+        </div>
+    {% endif %}
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -70,6 +89,7 @@
                 <th>Customer Name</th>
                 <th>Location</th>
                 <th>Order Status</th>
+                <th>Shipping Label</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -86,7 +106,8 @@
                         No address available
                     {% endfor %}
                 </td>
-                <td>{{order.status}}</td>
+                <td>{{ order.status }}</td>
+                <td><a href="/generatelabel/{{ order.id }}" style="text-decoration: none;">Generate Label</a></td>
                 <td><a href="/vieworder/{{ order.id }}" class="btn btn-primary">View</a></td>
             </tr>
             {% endfor %}
