@@ -30,6 +30,7 @@ class Order(models.Model):
     aid=models.ForeignKey('Address', on_delete=models.CASCADE, db_column='aid', null=True)
     status=models.CharField(max_length=50, default='Pending')
 
+
 # Address table
 class Address(models.Model):
     uid=models.ForeignKey('auth.user', on_delete=models.CASCADE, db_column='uid')
