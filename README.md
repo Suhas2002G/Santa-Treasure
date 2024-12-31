@@ -46,8 +46,8 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
   
 - **Reports (Generated via ReportLab):**
   - Admins can generate delivery reports that include charts and graphs:
-    1. Pie Chart: Visualizes the distribution of delivered vs. pending orders.
-    2. Bar Graph: Displays the number of gifts delivered per day or over a specified period.
+    1. Pie Chart: Visualizes the distribution of delivered vs. pending orders vs in-transit orders.
+    2. Bar Graph: Displays the number of gifts delivered on the basis of Location.
   - These reports are generated using the ReportLab library, which is used to create render these visualizations.
 
 
