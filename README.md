@@ -44,6 +44,11 @@ Santa's Treasure is a web application designed to simulate Santa’s gift delive
   - An OTP (One-Time Password) is sent to the customer's email when the delivery is scheduled.
   - The order will only be marked as "Delivered" when the correct OTP is entered by the user.
   
+- **Reports (Generated via ReportLab):**
+  - Admins can generate delivery reports that include charts and graphs:
+    1. Pie Chart: Visualizes the distribution of delivered vs. pending orders.
+    2. Bar Graph: Displays the number of gifts delivered per day or over a specified period.
+  - These reports are generated using the ReportLab library, which is used to create render these visualizations.
 
 
 ---
