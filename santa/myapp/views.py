@@ -95,7 +95,7 @@ def myprofile(request):
 
 # Add address page
 def addaddress(request):
-    # Load the Google Maps API key from the .env file
+    # Load the Google Maps API key from environment variables
     api_key = os.getenv('GOOGLE_MAPS_API_KEY')
     
     context = {
@@ -164,6 +164,7 @@ def addaddress(request):
             return redirect('/login')  # Redirect to login if not authenticated
 
     return render(request, 'addaddress.html', context)
+
 
 
 # Gifts/Product Page

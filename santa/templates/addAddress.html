@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block 'main' %}
 
 <div class="address-form-container">
@@ -17,7 +18,7 @@
         <div class="form-group">
             <label for="suggested_address">Suggested Address:</label>
             <input type="text" id="suggested_address" name="suggested_address" class="form-control" 
-                   placeholder="Start typing your address" oninput="getAddressSuggestions()">
+                   placeholder="Start typing your address" autocomplete="off">
             <ul id="suggestions-list" class="suggestions-list"></ul>
         </div>
         
@@ -45,47 +46,72 @@
         <button type="submit" class="btn btn-submit">Submit</button>
     </form>
 </div>
-
 <script>
-  // Get the Google Maps API Key passed from Django context
-  const apiKey = "{{ google_maps_api_key }}";
-
-  function getAddressSuggestions() {
-    const input = document.getElementById('suggested_address');
-    const query = input.value;
-
-    if (query.length < 3) {
-        document.getElementById('suggestions-list').innerHTML = '';
-        return;
-    }
-
-    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${apiKey}`;
-
-    fetch(geocodeUrl)
-        .then(response => response.json())
-        .then(data => {
-            const suggestionsList = document.getElementById('suggestions-list');
-            suggestionsList.innerHTML = '';
-
-            if (data.status === 'OK') {
-                data.results.forEach(result => {
-                    const suggestionItem = document.createElement('li');
-                    suggestionItem.textContent = result.formatted_address;
-                    suggestionItem.onclick = () => {
-                        input.value = result.formatted_address;
-                        document.getElementById('suggestions-list').innerHTML = '';
-
-                        // Pre-fill the manual address fields with suggestion
-                        document.getElementById('street_address').value = result.address_components[0].long_name || '';
-                        document.getElementById('city').value = result.address_components[1].long_name || '';
-                        document.getElementById('state').value = result.address_components[2].long_name || '';
-                        document.getElementById('postal_code').value = result.address_components[3].long_name || '';
-                    };
-                    suggestionsList.appendChild(suggestionItem);
-                });
-            }
+    // Get the Google Maps API Key passed from Django context
+    const apiKey = "{{ google_maps_api_key }}";
+  
+    function initializeAutocomplete() {
+      const input = document.getElementById('suggested_address');
+      const suggestionsList = document.getElementById('suggestions-list');
+      
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        types: ['geocode'],  // Restrict to address suggestions
+        componentRestrictions: { country: 'in' }  // Restrict to India (country code 'in')
+      });
+  
+      autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        
+        if (!place.geometry) {
+          return;
+        }
+  
+        // Populate the form fields with the address components
+        const addressComponents = place.address_components;
+  
+        let streetAddress = '';
+        let city = '';
+        let state = '';
+        let postalCode = '';
+  
+        // Loop through the address components to fill the fields
+        addressComponents.forEach(component => {
+          if (component.types.includes('route')) {
+            streetAddress = component.long_name;  // Street address
+          }
+          if (component.types.includes('locality')) {
+            city = component.long_name;  // City
+          }
+          if (component.types.includes('administrative_area_level_1')) {
+            state = component.long_name;  // State
+          }
+          if (component.types.includes('postal_code')) {
+            postalCode = component.long_name;  // Postal Code
+          }
         });
-  }
-</script>
-
+  
+        // Pre-fill the manual address fields with suggestion
+        document.getElementById('street_address').value = streetAddress;
+        document.getElementById('city').value = city;
+        document.getElementById('state').value = state;
+        document.getElementById('postal_code').value = postalCode;
+  
+        // Optionally, store the latitude and longitude (you can use it to update a hidden field if needed)
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+  
+        // Optionally, log the coordinates (if needed)
+        console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+      });
+    }
+  
+    // Load Google Maps Places API asynchronously
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initializeAutocomplete`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  </script>
+  
+  
 {% endblock 'main' %}

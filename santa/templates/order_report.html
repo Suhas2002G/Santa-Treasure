@@ -22,7 +22,7 @@
 <script>
     // Dynamically passed data from the Django view
     const orderStatusData = {
-        labels: ['Pending', 'In-Transit', 'Delivered', ],
+        labels: ['Pending', 'In-Transit', 'Delivered'],
         datasets: [{
             data: [
                 {{ order_status_data.pending }},
@@ -50,7 +50,15 @@
                     }
                 },
                 tooltip: {
-                    enabled: true
+                    enabled: true,
+                    callbacks: {
+                        // Custom tooltip label for each segment
+                        label: function(tooltipItem) {
+                            const label = tooltipItem.label || '';
+                            const count = tooltipItem.raw || 0;  // Raw value is the data point (count)
+                            return `${label}: ${count}`;
+                        }
+                    }
                 }
             }
         }
