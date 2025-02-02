@@ -12,6 +12,7 @@ urlpatterns = [
     path('myprofile', views.myprofile),
     path('gifts', views.gifts),
     path('addaddress', views.addaddress),
+    path('editaddress/<uid>', views.editaddress),
     path('search', views.search),
     path('giftdetail/<pid>', views.giftdetail),
     path('addtocart/<pid>', views.addtocart),
@@ -36,11 +37,6 @@ urlpatterns = [
     path('verify_otp/<int:order_id>/', views.verify_otp, name='verify_otp'),
     path('generatelabel/<int:order_id>', views.generatelabel),
     path('order_report', views.order_report)
-    
-    
-    
-
-
 
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

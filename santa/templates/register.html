@@ -4,15 +4,27 @@
 <div class="container-bg-register py-5">
   <div class="register-container">
     {% if errormsg %}
-    <div class="alert alert-danger custom-alert" role="alert">
+    <div class="alert alert-danger custom-alert" role="alert" id="errormsg" data-redirect-url="/register">
       <i class="bi bi-x-circle"></i> {{ errormsg }}
     </div>
+    <script>
+      // Redirect after 5 seconds
+      setTimeout(function() {
+          window.location.href = document.getElementById("errormsg").getAttribute("data-redirect-url");
+      }, 3000);
+    </script>
     {% endif %} 
     {% if success %}
-    <div class="alert alert-success custom-alert" role="alert">
+    <div class="alert alert-success custom-alert" role="alert" id="success" data-redirect-url="/login">
       <i class="bi bi-check-circle"></i> {{ success }}
     </div>
     {% endif %}
+    <script>
+      // Redirect after 5 seconds
+      setTimeout(function() {
+          window.location.href = document.getElementById("success").getAttribute("data-redirect-url");
+      }, 3000);
+    </script>
 
     <!-- Registration Form -->
     <h2 class="register-header">Santa's Logistics Registration</h2>

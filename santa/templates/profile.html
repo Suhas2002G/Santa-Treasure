@@ -8,7 +8,7 @@
         <p>Manage your account information</p>
     </div>
 
-    <div class="profile-card">
+    <div class="profile-card" style="margin-top: 20px;">
         <div class="profile-avatar">
             <img src="{% static 'images/profilepng.jpg' %}" alt="User Avatar">
         </div>
@@ -22,10 +22,19 @@
                 {{ address.state }}
                 {{ address.postal_code }}
             </p>
+            
+            
 
             {% if not address %}
-            <a href="/addaddress" class="btn btn-add-address">Add Address/Phone</a>
+            <a href="/addaddress" class="btn btn-add-address">Add Address/Phone no.</a>
             {% endif %}
+
+            {% if address %}
+            <button class="btn btn-warning mt-2"><a href="/editaddress/{{userid}}">Edit Address</a></button>
+            {% endif %}
+
+
+
         </div>
     </div>
 </div>

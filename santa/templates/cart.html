@@ -8,18 +8,19 @@
         <div class="customer-details">
             {% for i in data %}
                 {% if forloop.counter == 1 %}
-                    <h3>Customer Details</h3>
+                    <h5>Customer Details</h5>
                     <hr>
-                    <p><strong>Name:</strong> {{ i.uid.first_name }}</p>
-                    <p><strong>Email:</strong> {{ i.uid.email }}</p>
-                    <p><strong>Address:</strong>{{address.street_address}} {{address.city}} {{address.state}} {{address.postal_code}} </p>
+                    <p><strong>Name : </strong> {{ i.uid.first_name }}</p>
+                    <p><strong>Email : </strong> {{ i.uid.email }}</p>
+                    <p><strong>Address : </strong>{{address.street_address}} {{address.city}} {{address.state}} {{address.postal_code}} </p>
                 {% endif %}
             {% endfor %}
+                <!-- <button class="btn btn-warning mt-2"><a href="/editaddress/{{i.uid.id}}" class="mx-2">Edit Address</a></button> -->
         </div>
 
         <!-- Product Details Section -->
         <div class="cart-items">
-            <h3>Cart Items</h3>
+            <h4 class="mx-2">Cart Items</h4> <br>
             {% for i in data %}
             <div class="cart-item">
                 <div class="item-image">
@@ -60,7 +61,7 @@
         </div>
         <div class="text-center mt-3">
             <a href="/place_order">
-                <button class="btn btn-success btn-block">
+                <button class="btn btn-success btn-block" style="width: 200px;">
                     Place Order
                 </button>
             </a>

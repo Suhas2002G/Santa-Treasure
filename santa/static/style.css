@@ -1,4 +1,11 @@
 /* navbar style starts here  */
+a{
+  text-decoration: none;
+  color: black;
+}
+a:hover{
+  color: red;
+}
 .navbar-logo{
     font-size: 1rem;
     font-weight: bold;
@@ -89,7 +96,7 @@
     background-position: center;
     color: rgb(255, 255, 255);
     padding: 110px 0;
-    height: 85vh;   /* for santa image height */
+    height: 90vh;   /* for santa image height */
   }
   .tag-line{
     font-size: 1.4rem;
@@ -425,7 +432,7 @@
 }
 
 .search-input {
-  width: 400px;
+  width: 600px;
   padding: 12px;
   border-radius: 25px;
   border: 1px solid #ddd;
@@ -1167,7 +1174,7 @@ form.d-flex .btn-primary:hover {
 /* trackorder.html starts here  */
 .track-container {
   max-width: 1200px;
-  margin: 95px auto;
+  margin: 115px auto;
   padding: 20px;
   background-color: white;
   border-radius: 10px;

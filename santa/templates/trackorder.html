@@ -2,30 +2,35 @@
 {% load static %}
 
 {% block 'main' %}
-<div class="track-container">
+<div class="track-container ">
     <div class="tracking-card">
-    {% for i in data %}
         {% if errormsg %}
-            <div class="alert alert-danger custom-alert" role="alert">
+            <div class="alert alert-danger custom-alert" id="errormsg" role="alert" data-redirect-url="/trackorder">
             <i class="bi bi-x-circle"></i> {{ errormsg }}
             </div>
         {% endif %}
+        <script>
+            // Redirect after 5 seconds
+            setTimeout(function() {
+                window.location.href = document.getElementById("errormsg").getAttribute("data-redirect-url");
+            }, 3000);
+        </script>
 
         {% if success %}
             <div class="alert alert-success custom-alert" role="alert">
             <i class="bi bi-check-circle"></i> {{ success }}
             </div>
         {% endif %}
-    {% endfor %}
         <div class="card-header">
             <h3>Track Your Courier</h3>
         </div>
         <div class="card-body">
+            
             <form class="tracking-form" method="POST">
                 {% csrf_token %}
-                <label for="tracking-number" class="input-label">Enter Tracking Number:</label>
-                <input type="text" id="tracking-number" class="input-field" name="trackingid" placeholder="Tracking Number" >
-                <button type="submit" class="track-btn">Track</button>
+                <label for="tracking-number" class="input-label">Enter Order ID:</label>
+                <input type="text" id="tracking-number" class="input-field" name="trackingid" placeholder="Order ID" >
+                <button type="submit" class="track-btn mt-4">Track</button>
             </form>
         </div>
         

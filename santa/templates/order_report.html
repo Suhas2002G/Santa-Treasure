@@ -2,42 +2,71 @@
 {% load static %}
 
 {% block 'main' %}
-<div class="report-container">
-    <h2 class="chart-title">Order Status Overview</h2>
-    <!-- Apply explicit width and height via style and use flexbox for alignment -->
+<!-- Month-wise Order Count Bar Chart (2024) -->
+<div class="report-container" style="margin-top: 90px;">
+    <h2 class="chart-title">Monthly Order Count for 2024</h2>
     <div class="chart-wrapper">
-        <canvas id="orderStatusChart" class="chart-canvas"></canvas>
+        <canvas id="monthlyOrderChart2024" class="chart-canvas"></canvas>
     </div>
 </div>
 
+<!-- Month-wise Order Count Bar Chart (2025) -->
 <div class="report-container">
-    <h2 class="chart-title">Order Count by City</h2>
-    <!-- Apply explicit width and height via style and use flexbox for alignment -->
+    <h2 class="chart-title">Monthly Order Count for 2025</h2>
     <div class="chart-wrapper">
-        <canvas id="orderCityChart" class="chart-canvas"></canvas>
+        <canvas id="monthlyOrderChart2025" class="chart-canvas"></canvas>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Dynamically passed data from the Django view
-    const orderStatusData = {
-        labels: ['Pending', 'In-Transit', 'Delivered'],
-        datasets: [{
-            data: [
-                {{ order_status_data.pending }},
-                {{ order_status_data.in_transit }},
-                {{ order_status_data.delivered }}
-            ], // Data from context
-            backgroundColor: ['#FF5733', '#FFC300', '#28A745', '#DC3545'],
-            borderColor: '#fff',
-            borderWidth: 1
-        }]
+    // Dynamically passed data from the Django view for month-wise order counts
+    const months = [
+        'January', 'February', 'March', 'April', 'May', 'June', 
+        'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const orders2024 = {{ orders_2024_months|safe }}; // Orders count for each month in 2024
+    const orders2025 = {{ orders_2025_months|safe }}; // Orders count for each month in 2025
+
+    const monthlyOrderData2024 = {
+        labels: months,
+        datasets: [
+            {
+                label: 'Orders in 2024',
+                data: orders2024,
+                backgroundColor: '#3498DB',
+                borderColor: '#2980B9',
+                borderWidth: 1,
+                barThickness: 35, // Adjusts the thickness of the 2024 bars
+                borderRadius: 4, // Rounded corners for 2024 bars
+                categoryPercentage: 0.5, // Makes the bars thinner
+                barPercentage: 0.8 // Bar size within each category
+            }
+        ]
     };
 
-    const orderStatusConfig = {
-        type: 'pie',
-        data: orderStatusData,
+    const monthlyOrderData2025 = {
+        labels: months,
+        datasets: [
+            {
+                label: 'Orders in 2025',
+                data: orders2025,
+                backgroundColor: '#FF5733',
+                borderColor: '#C0392B',
+                borderWidth: 1,
+                barThickness: 35, // Adjusts the thickness of the 2025 bars
+                borderRadius: 4, // Rounded corners for 2025 bars
+                categoryPercentage: 0.5, // Makes the bars thinner
+                barPercentage: 0.8 // Bar size within each category
+            }
+        ]
+    };
+
+    // Configuration for 2024 chart
+    const monthlyOrderConfig2024 = {
+        type: 'bar',
+        data: monthlyOrderData2024,
         options: {
             responsive: true,
             plugins: {
@@ -52,50 +81,10 @@
                 tooltip: {
                     enabled: true,
                     callbacks: {
-                        // Custom tooltip label for each segment
                         label: function(tooltipItem) {
-                            const label = tooltipItem.label || '';
-                            const count = tooltipItem.raw || 0;  // Raw value is the data point (count)
-                            return `${label}: ${count}`;
+                            return tooltipItem.raw; // Displays the count value
                         }
                     }
-                }
-            }
-        }
-    };
-
-    // Initialize the Pie Chart for Order Status
-    const ctx1 = document.getElementById('orderStatusChart').getContext('2d');
-    new Chart(ctx1, orderStatusConfig);
-
-    // Data for Order Count by City
-    const cityData = {
-        labels: {{ cities|safe }}, // City names passed from Django context
-        datasets: [{
-            label: 'Order Count',
-            data: {{ order_counts|safe }}, // Order count for each city
-            backgroundColor: '#3498DB',
-            borderColor: '#fff',
-            borderWidth: 1
-        }]
-    };
-
-    const cityConfig = {
-        type: 'bar',
-        data: cityData,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: {
-                            size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    enabled: true
                 }
             },
             scales: {
@@ -119,9 +108,60 @@
         }
     };
 
-    // Initialize the Bar Chart for Order Count by City
-    const ctx2 = document.getElementById('orderCityChart').getContext('2d');
-    new Chart(ctx2, cityConfig);
+    // Configuration for 2025 chart
+    const monthlyOrderConfig2025 = {
+        type: 'bar',
+        data: monthlyOrderData2025,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.raw; // Displays the count value
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Initialize the 2024 bar chart
+    const ctx2024 = document.getElementById('monthlyOrderChart2024').getContext('2d');
+    new Chart(ctx2024, monthlyOrderConfig2024);
+
+    // Initialize the 2025 bar chart
+    const ctx2025 = document.getElementById('monthlyOrderChart2025').getContext('2d');
+    new Chart(ctx2025, monthlyOrderConfig2025);
 </script>
+
+
 
 {% endblock 'main' %}

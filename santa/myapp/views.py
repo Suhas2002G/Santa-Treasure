@@ -80,6 +80,7 @@ def user_logout(request):
 # My Profile Page for User
 def myprofile(request):
     user = request.user  # Get the currently logged-in user
+    userid = request.user.id
     try:
         address = Address.objects.get(uid=user)  # Fetch the address associated with the user
     except Address.DoesNotExist:
@@ -88,6 +89,7 @@ def myprofile(request):
     context = {
         'user': user,
         'address': address,
+        'userid' : userid
     }
     return render(request, 'profile.html', context)
 
@@ -99,7 +101,7 @@ def addaddress(request):
     api_key = os.getenv('GOOGLE_MAPS_API_KEY')
     
     context = {
-        'google_maps_api_key': api_key  # Pass the API key to the frontend
+        'google_maps_api_key': api_key  # Pass the API 
     }
 
     if request.method == 'POST':
@@ -164,6 +166,71 @@ def addaddress(request):
             return redirect('/login')  # Redirect to login if not authenticated
 
     return render(request, 'addaddress.html', context)
+
+
+
+# Edit address page
+def editaddress(request, uid):
+    try:
+        address = Address.objects.get(uid=uid)  # Fetch single address
+    except Address.DoesNotExist:
+        address = None  # Handle case if no address is found
+
+    api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+
+    if request.method == 'POST':
+        street_address = request.POST.get('street_address')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        postal_code = request.POST.get('postal_code')
+        phone = request.POST.get('phone', '')
+        suggested_address = request.POST.get('suggested_address', '')
+
+        full_address = f"{street_address}, {city}, {state}, {postal_code}" if street_address else suggested_address
+
+        latitude, longitude = None, None
+
+        if full_address:
+            try:
+                geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={full_address}&key={api_key}"
+                response = requests.get(geocode_url)
+                geocode_data = response.json()
+
+                if response.status_code == 200 and geocode_data.get('status') == 'OK':
+                    location = geocode_data['results'][0]['geometry']['location']
+                    latitude, longitude = location['lat'], location['lng']
+                else:
+                    return render(request, 'editaddress.html', {'errormsg': 'Error fetching location', 'address': address})
+            except Exception as e:
+                return render(request, 'editaddress.html', {'errormsg': str(e), 'address': address})
+
+        if request.user.is_authenticated:
+            if address:
+                address.street_address = street_address
+                address.city = city
+                address.state = state
+                address.postal_code = postal_code
+                address.phone = phone
+                address.latitude = latitude
+                address.longitude = longitude
+                address.save()
+            else:
+                Address.objects.create(
+                    uid=request.user,
+                    street_address=street_address,
+                    city=city,
+                    state=state,
+                    postal_code=postal_code,
+                    phone=phone,
+                    latitude=latitude,
+                    longitude=longitude
+                )
+
+            return redirect('/myprofile')
+        else:
+            return redirect('/login')
+
+    return render(request, 'editaddress.html', {'google_maps_api_key': api_key, 'address': address})
 
 
 
@@ -271,15 +338,15 @@ def viewcart(request):
     context={}
     c=Cart.objects.filter(uid=request.user.id)  
     #from cart table we have to fetched data of requested-authenticated user
-    address = Address.objects.get(uid=request.user.id) 
-
+    try:
+        address = Address.objects.get(uid=request.user.id) 
+    except:
+        return redirect('/myprofile')
+    
     amt=0
     for i in c:
         amt = amt + i.pid.price * i.qty
-    
-    # context['totalamt']=amt
-    # context['data']=c
-    # context['data1']=a
+
     context={
         'data': c,
         'address': address,
@@ -317,16 +384,16 @@ def place_order(request):
         # messages.error(request, "Please add an address before placing an order.")
         return redirect('/cart')  # Redirect to cart if no address is found
 
-    for i in c:
-        o = Order.objects.create(
-            pid=i.pid,  # Product ID from the Cart item
-            uid=i.uid,  # User ID from the Cart item
-            qty=i.qty,  # Quantity from the Cart item
-            totalamt=i.qty * i.pid.price,  # Total amount: qty * product price
-            aid=a  # Use the address ID of the first address for the user
-        )
-        o.save()  # Save the order
-        i.delete()  # Remove the cart item after the order is created
+    # for i in c:
+    #     o = Order.objects.create(
+    #         pid=i.pid,  # Product ID from the Cart item
+    #         uid=i.uid,  # User ID from the Cart item
+    #         qty=i.qty,  # Quantity from the Cart item
+    #         totalamt=i.qty * i.pid.price,  # Total amount: qty * product price
+    #         aid=a  # Use the address ID of the first address for the user
+    #     )
+    #     o.save()  # Save the order
+    #     i.delete()  # Remove the cart item after the order is created
     
     return redirect('/fetchorder')  # Redirect to order confirmation or order listing page
 
@@ -340,20 +407,22 @@ def fetchorder(request):
     
     context['finalamt']=amt
     context['data']=o
-    return render(request, 'pay.html', context )
+    # return render(request, 'pay.html', context )
+    return redirect('/makepayment')
 
 
 
 def makepayment(request):
     context={}
-    # os.environ.get['razorpay_api'] = Your Razorpay API
-    # os.environ.get['razorpay_api_key'] = Your Razorpay API Password
-    client = razorpay.Client(auth=(os.environ.get['razorpay_api'], os.environ.get['razorpay_api_key']))
+    RAZORPAY_API_KEY = os.getenv('RAZORPAY_API_KEY')
+    RAZORPAY_API_PASS = os.getenv('RAZORPAY_API_PASS')
 
-    o=Order.objects.filter(uid=request.user.id)   #calculate the total amount to pay and add amt to dict
+    client = razorpay.Client(auth=(RAZORPAY_API_KEY, RAZORPAY_API_PASS))
+
+    o=Cart.objects.filter(uid=request.user.id)   #calculate the total amount to pay and add amt to dict
     amt=0
     for i in o:
-        amt = amt + i.totalamt
+        amt = amt + i.pid.price * i.qty
 
     amt=amt*100 # to convert amount to paise 
 
@@ -361,12 +430,8 @@ def makepayment(request):
     payment = client.order.create(data=data)
     context['payment']=payment
 
-    c=Order.objects.filter(uid=request.user.id)
-    # for i in c:
-    #     o=OrderHistory.objects.create(pid=i.pid, uid=i.uid, qty=i.qty , totalamt=i.totalamt)
-    #     o.save()
-    #     i.delete() 
-
+    # print(payment)      #check whether amount is printing on terminal 
+    # return HttpResponse("Amount Fetched")
     return render(request, 'pay.html', context)
     
 
@@ -387,7 +452,25 @@ def paymentsuccess(request):
         [to],               #list beacause we can send mail to multiple emails-ids
         fail_silently=False
     )
+
+    c = Cart.objects.filter(uid=request.user.id)  # Fetch all cart items for the user
+    a = Address.objects.filter(uid=request.user.id).first()  # Fetch the first address for the user
+
+    for i in c:
+        o = Order.objects.create(
+            pid=i.pid,  # Product ID from the Cart item
+            uid=i.uid,  # User ID from the Cart item
+            qty=i.qty,  # Quantity from the Cart item
+            totalamt=i.qty * i.pid.price,  # Total amount: qty * product price
+            aid=a  # Use the address ID of the first address for the user
+        )
+        o.save()  # Save the order
+        i.delete()  # Remove the cart item after the order is created
+
     return render(request, 'paymentsuccess.html')
+
+
+
 
 
 
@@ -412,9 +495,9 @@ def adminLogin(request):
         if user.is_staff:  # Check for staff privileges
             login(request, user)
             return redirect('/dashboard')  # Redirect to admin dashboard
-        context['errormsg'] = "You don't have Admin access"
+        context['errormsg'] = "You don't have Staff access"
     else:
-        context['errormsg'] = 'Invalid Admin Credentials'
+        context['errormsg'] = 'Invalid Staff Credentials'
     return render(request, 'adminLogin.html', context)  # Render the login page with error message
 
 
@@ -460,6 +543,7 @@ def dashboard(request):
         'pending_orders': pending_orders,
         'delivered_orders': delivered_orders,
         'in_transit_orders':in_transit_orders,
+        'norecord' : 'No Record Found...!'
     }
     return render(request, 'dashboard.html', context)
 
@@ -496,6 +580,7 @@ def filter_status(request,sid):
         context['data']=o
         return render(request, 'dashboard.html', context)
 
+
 # Track Order Page for Admin
 def trackorder(request):
     context = {}
@@ -504,15 +589,16 @@ def trackorder(request):
     else:
         tid = request.POST.get('trackingid')  # Use .get() to avoid KeyError
         
-        if not tid:
-            context['errormsg'] = 'Please Enter Tracking ID'
+        if tid == '' :
+            context['errormsg'] = 'Please Enter Order ID'
             return render(request, 'trackorder.html', context)
         else:
             o = Order.objects.filter(id=tid)
             if o.exists(): 
                 context['data'] = o 
             else:
-                context['errormsg'] = 'Tracking ID Not Found'  
+                context['errormsg'] = 'Order ID Not Found' 
+                return render(request, 'trackorder.html', context) 
 
         return render(request, 'trackorderOutput.html', context)
 
@@ -542,8 +628,7 @@ def search_location(request):
 
 
 def vieworder(request, oid):
-    # Fetch the order detail using the given order ID (oid)
-    order_detail = Order.objects.get(id=oid)
+    order_detail = Order.objects.get(id=oid)  # Fetch the order detail using the given order ID (oid)
     
     # Get the customer's address related to the order
     address = order_detail.aid
@@ -697,27 +782,16 @@ def generatelabel(request, order_id):
 
 # Report Page [Pie chart & Bar Code]
 def order_report(request):
-    # Count orders by status
-    pending = Order.objects.filter(status='Pending').count()
-    in_transit = Order.objects.filter(status='In-Transit').count()
-    delivered = Order.objects.filter(status='Delivered').count()
+    # Count orders by month for 2024 and 2025
+    orders_2024_months = []
+    orders_2025_months = []
 
-    # Count orders by city 
-    city_order_counts = Order.objects.values('aid__city').annotate(order_count=Count('aid')).order_by('aid__city')
+    for month in range(1, 13):
+        orders_2024_months.append(Order.objects.filter(created_at__year=2024, created_at__month=month).count())
+        orders_2025_months.append(Order.objects.filter(created_at__year=2025, created_at__month=month).count())
 
-    # Prepare the data to be passed to the template
-    order_status_data = {
-        'pending': pending,
-        'in_transit': in_transit,
-        'delivered': delivered,
+    context = {
+        'orders_2024_months': orders_2024_months,
+        'orders_2025_months': orders_2025_months,
     }
-
-    # Extract city names and order counts from the query
-    cities = [item['aid__city'] for item in city_order_counts]
-    order_counts = [item['order_count'] for item in city_order_counts]
-
-    return render(request, 'order_report.html', {
-        'order_status_data': order_status_data,
-        'cities': cities,
-        'order_counts': order_counts
-    })
+    return render(request, 'order_report.html', context)

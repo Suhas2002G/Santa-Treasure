@@ -5,7 +5,7 @@
 
 <!-- Container for Admin Dashboard -->
 <div class="dash-container">
-    <h1 class="text-center">Welcome to the Admin Dashboard</h1>
+    <h1 class="text-center">Welcome to the Staff Dashboard</h1>
     
     <!-- Dashboard Cards -->
     <div class="row">
@@ -94,23 +94,35 @@
             </tr>
         </thead>
         <tbody>
-            {% for order in data %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.created_at|date:"Y-m-d" }}</td>
-                <td>{{ order.uid.first_name }} {{ order.uid.last_name }}</td>
-                <td>
-                    {% for address in order.uid.address_set.all %}
-                        {{ address.street_address }}, {{ address.city }}, {{ address.postal_code }}
-                    {% empty %}
-                        No address available
-                    {% endfor %}
-                </td>
-                <td>{{ order.status }}</td>
-                <td><a href="/generatelabel/{{ order.id }}" style="text-decoration: none;">Generate Label</a></td>
-                <td><a href="/vieworder/{{ order.id }}" class="btn btn-primary">View</a></td>
-            </tr>
-            {% endfor %}
+            {% if data %}
+                {% for order in data %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.created_at|date:"Y-m-d" }}</td>
+                        <td>{{ order.uid.first_name }} {{ order.uid.last_name }}</td>
+                        <td>
+                            {% for address in order.uid.address_set.all %}
+                                {{ address.street_address }}, {{ address.city }}, {{ address.postal_code }}
+                            {% empty %}
+                                No address available
+                            {% endfor %}
+                        </td>
+                        <td>{{ order.status }}</td>
+                        {% if order.status == 'Pending' %}
+                            <td><a href="/generatelabel/{{ order.id }}" style="text-decoration: none; color: rgb(21, 21, 192);">Generate Label</a></td>
+                        {% elif order.status == 'In-Transit' %}
+                            <td><a href="/generatelabel/{{ order.id }}" style="text-decoration: none; color: rgb(29, 29, 164);">View Label</a></td>
+                        {% elif order.status == 'Delivered' %}
+                            <td><a href="" style="text-decoration: none;"> - </a></td>
+                        {% endif %}
+                        <td><a href="/vieworder/{{ order.id }}" class="btn btn-primary">View</a></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center" style="color: red;">No Record Found</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

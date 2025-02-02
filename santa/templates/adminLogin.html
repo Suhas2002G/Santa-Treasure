@@ -7,13 +7,19 @@
   <div class="login-container">
 
     {% if errormsg %}
-    <div class="alert alert-danger custom-alert" role="alert">
+    <div class="alert alert-danger custom-alert" id="errormsg" role="alert" data-redirect-url="/adminLogin">
       <i class="bi bi-x-circle"></i> {{ errormsg }}
     </div>
     {% endif %}
+    <script>
+      // Redirect after 5 seconds
+      setTimeout(function() {
+          window.location.href = document.getElementById("errormsg").getAttribute("data-redirect-url");
+      }, 3000);
+    </script>
 
     <!-- Login Form -->
-    <h2 class="login-header">Admin Login for Santa's Treasure</h2>
+    <h2 class="login-header">Staff Login for Santa's Treasure</h2>
     <form action="#" method="POST">
       {% csrf_token %}
       <div class="mb-4 input-group">
